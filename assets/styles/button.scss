@@ -1,0 +1,116 @@
+$button-bg-color: $color-primary;
+$button-bg-hover: $color-accent;
+$button-bg-focus: $color-primary;
+$button-bg-active: #D54A4A;
+
+$button-border-hover: $color-accent;
+$button-border-focus: $color-accent;
+$button-border-active: #D54A4A;
+
+$button-border-width: 1px;
+$button-padding-sm: 10px 15px;
+$button-padding-lg: 15px 20px;
+
+@mixin make-btn($bg: $button-bg-color) {
+
+    @include transition(all, 0.1s);
+    @include disabled;
+
+    // Colors
+    color: white;
+    background: $bg;
+
+    border: $button-border-width solid $button-bg-color;
+    border-radius: calc($border-radius / 2);
+    // padding: $button-padding-sm;
+    height: 46px;
+
+    // Font size
+    font-family: $font-body;
+    font-size: $font-base-size;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+
+    // Full-width
+    display: inline-block;
+
+    &:hover {
+        color: white;
+        background: $button-bg-hover;
+        border-color: $button-bg-hover;
+        text-decoration: none;
+    }
+
+    &:active {
+        background: $button-bg-active;
+        border-color: $button-border-active;
+        box-shadow: 0 0px 5px $button-border-hover;
+    }
+
+    &:focus {
+        // background: $button-bg-focus;
+        border-color: $button-border-focus;
+        box-shadow: inset 0 0 0px 2px $button-border-active;
+        outline: none;
+        box-shadow: none;
+    }
+
+    &.inactive {
+
+        $inactive-hover: darken($color-inactive, $amount: 5);
+        $inactive-active: lighten($color-inactive, $amount: 2);
+
+        color: $color-body-fg;
+        background: $color-inactive;
+        border: $button-border-width solid rgba($color: #000000, $alpha: 0);
+
+        &:hover {
+            background: $inactive-hover;
+            border-color: $inactive-hover;
+            text-decoration: none;
+        }
+
+        &:focus {
+            background: $inactive-hover;
+            border-color: $inactive-hover;
+            outline: none;
+            box-shadow: none;
+        }
+
+        &:active {
+            background: $inactive-active;
+            border-color: $inactive-active;
+        }
+    }
+
+    &.loading {
+
+        @include loading(1.2em, 0.2em);
+
+        color: transparent !important;
+        position: relative;
+
+        &:after {
+            border-color: #FFFFFF transparent transparent;
+        }
+    }
+
+    &.icon {
+        width: 38px;
+        height: 38px;
+    }
+
+}
+
+.btn {
+    @include make-btn();
+}
+
+.btn-lg {
+    padding: $button-padding-lg !important;
+}
+
+.btn-block {
+    width: 100%;
+}

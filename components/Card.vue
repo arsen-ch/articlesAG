@@ -4,14 +4,14 @@
             <div class="card-content">
 
                 <!-- Likes -->
-                <div class="card-info">
+                <div class="card-info mt-0 mb-x">
                     <div class="level">
 
                         <!-- Like -->
                         <div class="level-side">
 
                             <div class="level-item">
-                                <img :src="'/svg/like-active.svg'" alt="Подобайка" />{{ 100 }}
+                                <img src="/svg/like-active.svg" alt="Подобайка" @click="addLike()" />{{ entry.likes }}
                             </div>
                         </div>
 
@@ -19,7 +19,7 @@
                         <div class="level-side">
 
                             <div class="level-item">
-                                <img :src="'/svg/pen.svg'" alt="Редактирование" />
+                                <img :src="'/svg/pen.svg'" alt="Редактирование" @click="editCard()" />
                             </div>
 
                         </div>
@@ -29,17 +29,49 @@
                 <!-- Image -->
                 <div class="card-image">
                     <img :src="'/img/thumbs/1-1.jpg'" alt="Изображение статьи" />
-                    <div class="card-image-fill" :style="{ backgroundImage: `url(img/card-bg.jpg)` }" />
+                    <div class="card-image-fill" :style="{ backgroundImage: `url(${entry.image})` }" />
                 </div>
 
                 <!-- Title -->
-                <h6 class="card-title my-x">title</h6>
-                <p class="card-description my-0">desk</p>
+                <h6 class="card-title mb-0 mt-x">{{ entry.title }}</h6>
+                <p class="card-description mt-x my-0">{{ entry.texts }}</p>
             </div>
         </div>
 
     </div>
 </template>
+
+<script>
+
+export default {
+
+    props: {
+        entry: {
+            type: Object,
+            default: () => {
+                return {
+                    image: 'img/card-bg.jpg',
+                    title: 'Тестовая карточка',
+                    texts: 'Описание тестовой карточки',
+                    likes: 777
+                };
+            }
+        }
+    },
+
+    methods: {
+
+        addLike() {
+            console.log( 'like it' );
+        },
+
+        editCard() {
+            console.log( 'edit it' );
+        }
+    }
+
+};
+</script>
 
 <style lang="scss">
 @import "~/assets/styles/vars.scss";
@@ -54,7 +86,7 @@
     border-radius: $border-radius;
 
     &-content {
-        padding: 16px;
+        padding: 15px;
     }
 
     &-info {
@@ -96,9 +128,9 @@
     }
 
     &-title {
-        color: #303446;
-        font-size: $font-headings-size;
-        font-weight: $font-headings-weight;
+        color: $color-title;
+        font-size: 16px;
+        font-weight: 800;
     }
 
     &-description {

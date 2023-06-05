@@ -1,13 +1,22 @@
 <template>
-    <section>
-        <card />
-        <temp />
+    <section class="container">
+        <controls @category-create="categoryCreate()" />
+        <grid />
+        <modal-new-cat />
+
+
     </section>
 </template>
 
 <script>
 export default {
-    name: 'IndexPage'
+    name: 'IndexPage',
+
+    methods: {
+        categoryCreate() {
+            console.log( 'showmodal' );
+        }
+    }
 };
 </script>
 
@@ -26,10 +35,25 @@ html {
 body {
     color: $color-body-fg;
     background: $color-body-bg;
-
     font-family: $font-body;
     font-size: $font-base-size;
-    // font-weight: $font-base-weight;
-    // line-height: $font-leading;
+    padding: 64px;
+}
+
+hr {
+    border: 1px solid $color-inactive;
+}
+
+// a.
+.fade-enter-active,
+.fade-leave-active {
+    opacity: 1;
+    transition: all 0.2s;
+}
+
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+    transform: scale(1.03);
 }
 </style>

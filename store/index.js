@@ -1,11 +1,11 @@
 import { flatDict } from './utils';
-import { fetchedData } from '~/assets/data/data.js';
+import { fetchedData, sample } from '~/assets/data/data.js';
 
 export const state = () => ( {
 
     articles: fetchedData,
     isLoading: false,
-    categories: {}
+    categories: sample // {}
 
 } );
 
@@ -72,7 +72,7 @@ export const getters = {
 
         const entries = Object.entries( state.categories );
         const flatted = flatDict( entries, state.categories );
-
+        console.log( 'flatted', state.categories );
         return flatted;
     },
 

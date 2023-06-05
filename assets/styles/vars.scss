@@ -16,12 +16,24 @@ $border: 1px solid #BFC3D5;
 $border-radius: 10px;
 
 // Colors
-$color-primary: #015292;
-$color-accent: #167efa;
-$color-dimmer: #A0A6BF;
+$color-primary: #ED5252;
+$color-accent: #F06C6C;
+$color-dimmer: #9799A0;
+$color-title: #303446;
+$color-disabled: #A0A6BF;
+$color-inactive: #EEEEEF;
+$color-border: #D9DDE6;
 
 $color-body-fg: #6A6E7E;
 $color-body-bg: white;
+
+// Hover 
+$color-hover-fg: $color-primary;
+$color-hover-bg: $color-dimmer; //#f4f5f6; // rgba(0, 0, 0, 0.05);#F3F4F5
+
+// Focus 
+$color-focus-fg: $color-accent;
+$color-focus-bg: $color-dimmer;
 
 // Modal
 $modal-width: 49.5%;
@@ -32,9 +44,6 @@ $modal-padding: 10px 40px;
 $font-base-size: 16px;
 $font-base-weight: 400;
 
-$font-headings-size: 16px;
-$font-headings-weight: 600;
-
 $font-leading: 22px;
 $word-spacing: 0px;
 
@@ -44,3 +53,5 @@ $font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Robot
 $font-body: $font-family;
 $font-headings: $font-family;
 $font-monospace: monospace;
+
+$transition-time: 0.4s;

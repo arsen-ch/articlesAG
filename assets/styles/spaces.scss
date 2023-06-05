@@ -88,3 +88,34 @@ $fields: m, p;
 }
 
 @include level("level");
+
+// Container
+.container {
+    width: 1236px;
+    margin-right: auto;
+    margin-left: auto;
+    // padding-right: 15px;
+    // padding-left: 15px;
+}
+
+// Row
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    // margin-right: -15px;
+    // margin-left: -15px;
+}
+
+// Col
+.col-4 {
+    flex: 0 0 25%;
+    max-width: 25%;
+    // position: relative;
+    // width: 100%;
+    // padding-right: 15px;
+    // padding-left: 15px;
+}
+
+.vertical-center {
+    vertical-align: middle;
+}
