@@ -1,5 +1,7 @@
 <template>
-    <Tutorial />
+    <section>
+
+    </section>
 </template>
 
 <script>

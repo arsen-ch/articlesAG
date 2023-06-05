@@ -11,15 +11,13 @@ export const state = () => ( {
 
 export const actions = {
     nuxtServerInit( { commit } ) {
-        commit( 'Init', {} );
+        commit( 'init', {} );
     }
 };
 
 export const mutations = {
 
-    init( state ) {
-        state.articles = {};
-    },
+    init( state ) { },
 
     addCategory( state, { key, parent } ) {
 
@@ -71,8 +69,11 @@ export const mutations = {
 export const getters = {
 
     getCategories( state ) {
-        const flat = flatDict( state.categories );
-        return flat;
+
+        const entries = Object.entries( state.categories );
+        const flatted = flatDict( entries, state.categories );
+
+        return flatted;
     },
 
     getArticles( state ) {

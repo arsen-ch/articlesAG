@@ -1,22 +1,21 @@
-export function flatDict( categories ) {
+export function flatDict( entries, categories ) {
 
     const result = {};
 
     // #1 pass
-    const entries = Object.entries( categories );
-    const exclude = [];
+    const excluded = [];
     for ( const [ key, category ] of entries ) {
 
         if ( !category.parent ) {
             result[ key ] = { main: Object.values( category.articles ), subs: {} };
         } else {
-            exclude.push( [ key, category ] );
+            excluded.push( [ key, category ] );
         }
 
     }
 
     // #2 pass
-    for ( const [ key, category ] of exclude ) {
+    for ( const [ key, category ] of excluded ) {
         result[ category.parent ].subs[ key ] = Object.values( categories[ key ].articles );
     }
 
@@ -24,10 +23,29 @@ export function flatDict( categories ) {
 
 }
 
-export function filterDict( categories ) {
-    return 0;
+export function filterDict( entries, str, field = 'title' ) {
+
+    const filtered = [];
+    for ( const [ key, val ] of entries ) {
+
+        const _ = Object.entries( val.articles ).filter( ( [ _, article ] ) => {
+            return article[ field ] === str;
+        } );
+
+        filtered.push( [ key, { parent: val.parent, articles: Object.fromEntries( _ ) } ] );
+
+    }
+
+    return filtered;
+
 };
 
 export function pageDict( categories ) {
     return 0;
+}
+
+export function filterList( list ) {
+    return list.filter( ( word ) => {
+        return word.toLowerCase().includes( this.searchString.toLowerCase() );
+    } );
 }
