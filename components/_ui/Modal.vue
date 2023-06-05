@@ -1,19 +1,30 @@
 <template>
-    <div class="dimmer active"
-         :style="{ position: 'fixed' }">
+    <transition name="modal">
+        <div v-if="isVisible" class="dimmer active" :style="{ position: 'fixed' }">
 
-        <div ref="modal"
-             tabindex="0"
-             class="modal attached"
-             :class="[ attached ]"
-             @keydown.esc.stop="closeHandler">
 
-            <!-- Content -->
-            <div class="modal-content" :style="`width: ${width}px; height: ${height}px; padding: ${padding}`">
-                <slot></slot>
+            <div class="modal attached" :class="[ attached ]" @keydown.esc.stop="cancelHandler()">
+
+                <!-- Content -->
+                <div ref="slot"
+                     class="modal-content"
+                     :style="`width: ${width}px; height: ${height}px; padding: ${padding}`">
+                    <slot />
+
+                    <!-- Footer -->
+                    <div>
+                        <hr>
+                        <div class="footer">
+                            <button class="btn" @click="applySettings()">Сохранить</button>
+                            <button class="btn inactive" @click="cancelHandler()">Отмена</button>
+                        </div>
+
+                    </div>
+                </div>
             </div>
+
         </div>
-    </div>
+    </transition>
 </template>
 
 <script>
@@ -27,21 +38,35 @@ export default {
         height: { type: [ Number, String ], default: 530 }
     },
 
-    watch: {
-        visible() {
-            if ( this.visible ) {
-                this.$refs.info.focus();
-            }
-        }
-    },
-
-    mounted() {
-        this.$refs.modal.focus();
+    data() {
+        return {
+            isVisible: false
+        };
     },
 
     methods: {
-        closeHandler() {
-            this.$emit( 'close-modal' );
+
+        applySettings() {
+
+            const ctx = this.$slots.default[ 0 ].context;
+            const { selectedName, selectedParent, selectedArticles } = ctx;
+
+            if ( selectedName !== '' ) {
+                this.$store.commit( 'addCategory', { key: selectedName, parent: selectedParent } );
+                this.$store.commit( 'addArticles', { key: selectedName, articles: selectedArticles } );
+            }
+
+            // Close
+            this.cancelHandler();
+
+        },
+
+        cancelHandler() {
+            this.isVisible = false;
+        },
+
+        setVisible( arg = true ) {
+            this.isVisible = arg;
         }
     }
 };
@@ -76,8 +101,41 @@ export default {
         height: 100%;
     }
 
+    .controls {
+
+        display: flex;
+        flex-direction: column;
+
+        // & :not(:last-child) {
+        //     margin-bottom: 4px;
+        // }
+    }
+
+    .footer {
+
+        display: flex;
+        justify-content: space-between;
+
+        & .btn {
+            width: 48%;
+        }
+    }
+
     &:focus {
         outline: $color-primary;
     }
+}
+
+// a.
+.modal-enter-active,
+.modal-leave-active {
+    opacity: 1;
+    transition: all 0.35s ease-in-out;
+}
+
+.modal-enter,
+.modal-leave-to {
+    opacity: 0;
+    transform: scale(1.05);
 }
 </style>

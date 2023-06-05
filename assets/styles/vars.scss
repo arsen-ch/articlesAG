@@ -15,6 +15,11 @@ $breakpoint-desktop: map-get($grid-breakpoints, 'xl');
 $border: 1px solid #BFC3D5;
 $border-radius: 10px;
 
+// Shadow
+$shadow-sm: 0 1px 5px rgba(0, 0, 0, 0.2) !default;
+$shadow: 0 .5rem 1rem rgba(black, .10) !default;
+$shadow-lg: 0 1rem 3rem rgba(black, .175) !default;
+
 // Colors
 $color-primary: #ED5252;
 $color-accent: #F06C6C;
@@ -26,6 +31,7 @@ $color-border: #D9DDE6;
 
 $color-body-fg: #6A6E7E;
 $color-body-bg: white;
+$color-opacity: 0.6;
 
 // Hover 
 $color-hover-fg: $color-primary;

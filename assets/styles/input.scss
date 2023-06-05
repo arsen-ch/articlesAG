@@ -1,0 +1,35 @@
+$indent: 5px;
+
+.input,
+.textarea {
+
+    @include form-element();
+
+    width: 100%;
+    height: 46px;
+
+    &::placeholder {
+        opacity: $color-opacity;
+    }
+
+}
+
+.icon {
+    font-size: 1em;
+    border-radius: 0 4px 4px 0;
+    opacity: .5;
+
+    display: inline-block;
+    line-height: 1em;
+    text-align: center;
+
+    position: absolute;
+    top: 0;
+    right: $indent;
+    margin: 0;
+
+    width: 32px;
+    height: 100%;
+
+    z-index: 2;
+}

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="controls mb-2">
+        <div class="search-bar mb-2">
 
             <!-- Create button -->
             <button class="btn" @click="$emit( 'category-create' )">
@@ -8,7 +8,7 @@
                 <img class="vertical-center" src="svg/plus.svg"></button>
 
             <!-- Search field -->
-            <field />
+            <x-input />
 
         </div>
     </div>
@@ -19,8 +19,10 @@ export default {};
 </script>
 
 <style lang="scss">
-.controls {
+.search-bar {
+
     display: flex;
+
     .btn {
         width: 280px;
         margin-right: 16px;

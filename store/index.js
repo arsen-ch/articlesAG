@@ -47,6 +47,15 @@ export const mutations = {
 
     },
 
+    addArticles( state, { key, articles } ) {
+
+        if ( !state.categories[ key ] ) { return; }
+        for ( const article of articles ) {
+            this._vm.$set( state.categories[ key ].articles, article.id, article );
+        }
+
+    },
+
     delArticle( state, { key, articleId } ) {
         if ( !state.categories[ key ] ) { return; }
         this._vm.$delete( state.categories[ key ].articles, articleId );
@@ -72,12 +81,16 @@ export const getters = {
 
         const entries = Object.entries( state.categories );
         const flatted = flatDict( entries, state.categories );
-        console.log( 'flatted', state.categories );
+
         return flatted;
     },
 
     getArticles( state ) {
         return state.articles;
+    },
+
+    getCategories( state ) {
+        return Object.keys( state.categories );
     }
 
 };

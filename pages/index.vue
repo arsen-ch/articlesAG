@@ -1,22 +1,24 @@
 <template>
     <section class="container">
-        <controls @category-create="categoryCreate()" />
-        <grid />
-        <modal-new-cat />
 
+        <search-bar @category-create="setVisible( 'modalNew', true )" />
+
+        <grid />
+
+        <modal-new ref="modalNew" />
 
     </section>
 </template>
 
 <script>
 export default {
-    name: 'IndexPage',
 
     methods: {
-        categoryCreate() {
-            console.log( 'showmodal' );
+        setVisible( modal, arg ) {
+            this.$refs[ modal ].$refs.xmodal.isVisible = arg;
         }
     }
+
 };
 </script>
 

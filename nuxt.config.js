@@ -36,6 +36,11 @@ export default {
             },
             {
                 path: '~/components/_ui/',
+                prefix: 'x'
+
+            },
+            {
+                path: '~/components/Modals/',
                 pathPrefix: false
 
             }
