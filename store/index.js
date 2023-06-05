@@ -1,5 +1,5 @@
 import { flatDict } from './utils';
-import { fetchedData } from '~/assets/data.js';
+import { fetchedData } from '~/assets/data/data.js';
 
 export const state = () => ( {
 
@@ -68,7 +68,7 @@ export const mutations = {
 
 export const getters = {
 
-    getCategories( state ) {
+    getContent( state ) {
 
         const entries = Object.entries( state.categories );
         const flatted = flatDict( entries, state.categories );
