@@ -1,0 +1,90 @@
+// Paddings | Margins
+$spacing: $font-leading;
+$fields: m, p;
+
+@each $field in $fields {
+
+    $type: padding;
+
+    @if $field==m {
+        $type: margin;
+    }
+
+    // mx-1 px-1 .. mx-5 px-5
+    @for $i from 0 through 5 {
+        .#{$field}x-#{$i} {
+            #{$type}-left: ($spacing * $i) !important;
+            #{$type}-right: ($spacing * $i) !important;
+        }
+
+        .#{$field}y-#{$i} {
+            #{$type}-top: ($spacing * $i) !important;
+            #{$type}-bottom: ($spacing * $i) !important;
+        }
+
+        .#{$field}t-#{$i} {
+            #{$type}-top: $spacing * $i !important;
+        }
+
+        .#{$field}b-#{$i} {
+            #{$type}-bottom: $spacing * $i !important;
+        }
+    }
+
+    // mx-x px-x
+    .#{$field}x-x {
+        #{$type}-left: (math.div($spacing, 2)) !important;
+        #{$type}-right: (math.div($spacing, 2)) !important;
+    }
+
+    .#{$field}y-x {
+        #{$type}-top: (math.div($spacing, 2)) !important;
+        #{$type}-bottom: (math.div($spacing, 2)) !important;
+    }
+
+    .#{$field}t-x {
+        #{$type}-top: math.div($spacing, 2) !important;
+    }
+
+    .#{$field}b-x {
+        #{$type}-bottom: math.div($spacing, 2) !important;
+    }
+}
+
+// Level
+@mixin level($name, $margin-child: 1em) {
+
+    .#{$name} {
+
+        display: flex;
+        vertical-align: middle;
+        justify-content: space-between;
+        flex-wrap: wrap;
+
+        &-side {
+
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+
+            &> :not(:last-child) {
+                margin-right: 0.5em;
+            }
+        }
+
+        &-item {
+
+            display: flex;
+            align-items: center;
+
+            &> :not(:last-child) {
+                margin-right: 0.5em;
+            }
+
+            @content;
+        }
+
+    }
+}
+
+@include level("level");

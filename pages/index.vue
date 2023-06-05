@@ -1,5 +1,6 @@
 <template>
     <section>
+        <card />
         <temp />
     </section>
 </template>
