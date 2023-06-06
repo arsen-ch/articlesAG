@@ -1,5 +1,5 @@
 <template>
-    <div class="articles-row">
+    <div class="items-row">
         <div v-for="(article, index) in articles.slice( 0, 15 )" :key="article.id">
             <div class="articles-item">
                 <button class="btn btn-tag" @click="deleteHandler( index )">
@@ -28,7 +28,7 @@ export default {
 </script>
 
 <style lang="scss">
-.articles-row {
+.items-row {
 
     display: flex;
     flex-wrap: wrap;

@@ -3,7 +3,7 @@
         <div class="search-bar mb-2">
 
             <!-- Create button -->
-            <button class="btn" @click="$emit( 'category-create' )">
+            <button class="btn" @click="$root.$emit( 'setVisible', [ 'modalNew', true ] )">
                 Создать категорию
                 <img class="vertical-center" src="svg/plus.svg"></button>
 

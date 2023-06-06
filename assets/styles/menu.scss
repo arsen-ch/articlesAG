@@ -1,9 +1,14 @@
-$menu-min-width: 160px;
+$menu-min-width: 120px;
 $menu-content-padding: 12px 14px;
 
 .menu {
 
+    @include form-panel();
+
+    font-size: 12px;
+
     background-color: white;
+    border-radius: 3px;
     list-style: none;
 
     padding: 0;
@@ -13,9 +18,8 @@ $menu-content-padding: 12px 14px;
 
     .item {
 
-        @include transition(all);
-        @include disabled;
-        
+        @include transition(background);
+
         text-align: left;
         vertical-align: middle;
         white-space: nowrap;
@@ -23,26 +27,19 @@ $menu-content-padding: 12px 14px;
         padding: $menu-content-padding;
         margin: 0;
 
+        border-top: 1px solid $color-inactive;
+        min-width: $menu-min-width;
+
         cursor: pointer;
-    }
 
-    &.vertical {
-
-        @include form-panel();
-
-        >.item {
-
-            border-top: 1px solid $color-inactive;
-            min-width: $menu-min-width;
-
-            &:first-child {
-                border-top: none;
-            }
+        &:hover {
+            background: $color-inactive;
         }
+
+        &:first-child {
+            border-top: none;
+        }
+
     }
 
-    &.compact {
-        display: inline-flex;
-        vertical-align: middle;
-    }
 }

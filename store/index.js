@@ -71,6 +71,14 @@ export const mutations = {
 
         this._vm.$set( state.categories[ key ], 'parent', parent );
 
+    },
+
+    addLike( state, { key, id } ) {
+
+        const entry = state.categories[ key ];
+        const likes = entry.articles[ id ].likes;
+        this._vm.$set( entry.articles[ id ], 'likes', likes + 1 );
+
     }
 
 };

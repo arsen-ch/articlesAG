@@ -11,7 +11,8 @@
                         <div class="level-side">
 
                             <div class="level-item">
-                                <img src="/svg/like-active.svg" alt="Подобайка" @click="addLike()" />{{ entry.likes }}
+                                <img :class="{ scaleUp: likeIt }" class="like" src="/svg/like-active.svg" alt="Подобайка"
+                                     @click="addLike()" />{{ entry.likes }}
                             </div>
                         </div>
 
@@ -34,7 +35,10 @@
 
                 <!-- Title -->
                 <h6 class="card-title mb-0 mt-x">{{ entry.title }}</h6>
-                <p class="card-description mt-x my-0">{{ entry.texts }}</p>
+                <p class="card-description mt-x my-0">{{ entry.texts.length >= 190
+                    ? `${entry.texts.slice( 0, 190 )}...`
+                    : entry.texts
+                }}</p>
             </div>
         </div>
 
@@ -46,6 +50,7 @@
 export default {
 
     props: {
+        category: { type: String, default: '' },
         entry: {
             type: Object,
             default: () => {
@@ -59,10 +64,19 @@ export default {
         }
     },
 
+    data() {
+        return {
+            likeIt: false
+        };
+    },
+
     methods: {
 
         addLike() {
-            console.log( 'like it' );
+            this.$store.commit( 'addLike', { key: this.category, id: this.entry.id } );
+
+            this.likeIt = true;
+            setTimeout( () => { this.likeIt = false; }, 1500 );
         },
 
         editCard() {
@@ -76,9 +90,11 @@ export default {
 <style lang="scss">
 @import "~/assets/styles/vars.scss";
 
+$like-opacity: 0.7;
+
 .card {
 
-    width: 290px;
+    width: 299px;
     height: 295px;
 
     background: white;
@@ -92,6 +108,10 @@ export default {
     &-info {
         color: $color-dimmer;
         font-size: 12px;
+
+        .like {
+            opacity: $like-opacity;
+        }
 
         img {
             cursor: pointer;
@@ -137,5 +157,27 @@ export default {
         font-size: 13px;
     }
 
+}
+
+// a.
+.scaleUp {
+    animation: scaleUp 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes scaleUp {
+
+    0% {
+        opacity: $like-opacity;
+    }
+
+    50% {
+        transform: rotate(-25deg) scale(2);
+        opacity: 1;
+    }
+
+    100% {
+        opacity: $like-opacity;
+
+    }
 }
 </style>

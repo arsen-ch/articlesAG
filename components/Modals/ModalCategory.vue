@@ -1,11 +1,13 @@
 <template>
-    <x-modal ref="xmodal" @close-modal="isVisible = false">
+    <modal ref="xmodal">
 
         <!-- Content -->
         <div>
 
-            <h3 class="title my-x">Новая категория </h3>
+            <!-- Title -->
+            <h3 class="title my-x">{{ title }}</h3>
 
+            <!-- Controls -->
             <div class="controls">
 
                 <!-- Category -->
@@ -28,19 +30,21 @@
                 </x-select>
 
                 <!-- Article row -->
-                <articles-row :articles="selectedArticles"
-                              @delete-article="( index ) => { deleteArticle( index ); }" />
+                <items-row :articles="selectedArticles"
+                           @delete-article="( index ) => { deleteHandler( index ); }" />
 
             </div>
-        </div>
 
-    </x-modal>
+        </div>
+    </modal>
 </template>
 
 <script>
 export default {
 
-    name: 'ModalNewCategory',
+    props: {
+        title: { type: String, default: '' }
+    },
 
     data() {
         return {
@@ -60,8 +64,28 @@ export default {
             this.selectedArticles.push( article );
         },
 
-        deleteArticle( index ) {
+        deleteHandler( index ) {
             this.selectedArticles.splice( index, 1 );
+        },
+
+        apply() {
+
+            if ( this.selectedName !== '' ) {
+                this.$store.commit( 'addCategory', { key: this.selectedName, parent: this.selectedParent } );
+                this.$store.commit( 'addArticles', { key: this.selectedName, articles: this.selectedArticles } );
+            }
+
+            // Close
+            this.clear();
+
+        },
+
+        clear() {
+
+            this.selectedName = '';
+            this.selectedParent = null;
+            this.selectedArticles = [];
+
         }
     }
 };

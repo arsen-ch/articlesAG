@@ -127,6 +127,14 @@
     box-shadow: $shadow-sm;
 }
 
+.relative {
+    position: relative;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
 .dimmer {
 
     background-color: $color-dimmer;

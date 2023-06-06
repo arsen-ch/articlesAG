@@ -1,11 +1,16 @@
 <template>
     <section class="container">
 
-        <search-bar @category-create="setVisible( 'modalNew', true )" />
+        <!-- Header -->
+        <header-box />
 
+        <!-- Grid -->
         <grid />
 
-        <modal-new ref="modalNew" />
+        <!-- Modals -->
+        <modal-category ref="modalNew" title="Новая категория" />
+        <modal-category ref="ModalChg" title="Редактирование категории" />
+        <modal-articles ref="modalArt" title="Изменения расположения статьи" />
 
     </section>
 </template>
@@ -13,8 +18,16 @@
 <script>
 export default {
 
+    mounted() {
+        this.$root.$on( 'setVisible', this.setVisible );
+    },
+
+    beforeDestroy() {
+        this.$root.$off( 'setVisible' );
+    },
+
     methods: {
-        setVisible( modal, arg ) {
+        setVisible( [ modal, arg ] ) {
             this.$refs[ modal ].$refs.xmodal.isVisible = arg;
         }
     }

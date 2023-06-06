@@ -1,21 +1,24 @@
 <template>
     <transition name="modal">
-        <div v-if="isVisible" class="dimmer active" :style="{ position: 'fixed' }">
 
+        <!-- Anchor -->
+        <div v-if="isVisible" ref="root" class="dimmer active" :style="{ position: 'fixed' }">
 
+            <!-- Modal window -->
             <div class="modal attached" :class="[ attached ]" @keydown.esc.stop="cancelHandler()">
 
                 <!-- Content -->
-                <div ref="slot"
-                     class="modal-content"
+                <div class="modal-content"
                      :style="`width: ${width}px; height: ${height}px; padding: ${padding}`">
                     <slot />
 
                     <!-- Footer -->
                     <div>
+
                         <hr>
+                        <!-- Buttons -->
                         <div class="footer">
-                            <button class="btn" @click="applySettings()">Сохранить</button>
+                            <button class="btn" @click="applyHandler()">Сохранить</button>
                             <button class="btn inactive" @click="cancelHandler()">Отмена</button>
                         </div>
 
@@ -44,17 +47,16 @@ export default {
         };
     },
 
+    mounted() {
+        // this.$refs.root.$el.focus();
+    },
+
     methods: {
 
-        applySettings() {
+        applyHandler() {
 
             const ctx = this.$slots.default[ 0 ].context;
-            const { selectedName, selectedParent, selectedArticles } = ctx;
-
-            if ( selectedName !== '' ) {
-                this.$store.commit( 'addCategory', { key: selectedName, parent: selectedParent } );
-                this.$store.commit( 'addArticles', { key: selectedName, articles: selectedArticles } );
-            }
+            ctx.apply();
 
             // Close
             this.cancelHandler();
@@ -62,7 +64,13 @@ export default {
         },
 
         cancelHandler() {
+
             this.isVisible = false;
+
+            // Close
+            const ctx = this.$slots.default[ 0 ].context;
+            ctx.clear();
+
         },
 
         setVisible( arg = true ) {
@@ -79,7 +87,7 @@ export default {
 .modal {
 
     border-radius: $border-radius;
-    z-index: 9999;
+    z-index: 999;
 
     &.attached.center {
         position: absolute;
@@ -105,10 +113,6 @@ export default {
 
         display: flex;
         flex-direction: column;
-
-        // & :not(:last-child) {
-        //     margin-bottom: 4px;
-        // }
     }
 
     .footer {
