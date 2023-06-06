@@ -31,7 +31,7 @@ $select-content-padding: 0.785em 0.925em;
         transform: translateY(-50%);
 
         &.hint {
-            opacity: $color-opacity;
+            color: $color-disabled;
         }
     }
 

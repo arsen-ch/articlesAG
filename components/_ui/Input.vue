@@ -2,9 +2,10 @@
     <div style="width: 100%; height: 100%; position: relative;">
 
         <input :id="id"
-               class="input"
                :name="id"
                :placeholder="holder"
+               :value="value"
+               class="input"
                @input="updateValue( $event.target.value )"
                @keydown.enter="$emit( 'enter' )">
 
@@ -20,6 +21,7 @@ export default {
         id: { type: String, default: 'search' },
         icon: { type: String, default: 'search' },
         holder: { type: String, default: 'Найти...' },
+        value: { type: [ String, Number, null ], default: null },
         showIcon: { type: Boolean, default: false }
     },
 

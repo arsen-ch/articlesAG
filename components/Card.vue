@@ -35,10 +35,7 @@
 
                 <!-- Title -->
                 <h6 class="card-title mb-0 mt-x">{{ entry.title }}</h6>
-                <p class="card-description mt-x my-0">{{ entry.texts.length >= 190
-                    ? `${entry.texts.slice( 0, 190 )}...`
-                    : entry.texts
-                }}</p>
+                <p class="card-description mt-x my-0">{{ description }}</p>
             </div>
         </div>
 
@@ -70,17 +67,29 @@ export default {
         };
     },
 
+    computed: {
+
+        description() {
+            const texts = this.entry.texts || '-';
+            const d = texts.length >= 190 ? `${texts.slice( 0, 190 )}...` : texts; return d;
+        }
+
+    },
+
     methods: {
 
         addLike() {
+
             this.$store.commit( 'addLike', { key: this.category, id: this.entry.id } );
 
+            // Anim
             this.likeIt = true;
             setTimeout( () => { this.likeIt = false; }, 1500 );
+
         },
 
         editCard() {
-            console.log( 'edit it' );
+            this.$root.$emit( 'setVisible', { modal: 'modalArt' } );
         }
     }
 

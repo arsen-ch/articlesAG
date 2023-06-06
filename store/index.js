@@ -1,4 +1,4 @@
-import { flatDict } from './utils';
+import { flatDict, forKey, childReplace } from './utils';
 import { fetchedData, sample } from '~/assets/data/data.js';
 
 export const state = () => ( {
@@ -10,9 +10,12 @@ export const state = () => ( {
 } );
 
 export const actions = {
-    nuxtServerInit( { commit } ) {
-        commit( 'init', {} );
-    }
+
+    // write( { commit }, key ) {
+    //     // commit( 'addCategory' )
+    //     // commit( 'addArticles' )
+    // }
+
 };
 
 export const mutations = {
@@ -25,20 +28,46 @@ export const mutations = {
         parent = parent || null;
         if ( parent ) {
 
-            if ( !state.categories[ parent ] ) { return; }
-            parent = state.categories[ parent ]?.parent ? null : parent;
+            if ( !state.categories[ parent ]?.parent ) {
+                state.categories[ parent ].children.push( key );
+            } else {
+                parent = null;
+            }
 
         }
 
         // New entry
-        const entry = { parent, articles: {} };
+        const entry = { parent, children: [], articles: {}, timestamp: new Date().getTime() };
         this._vm.$set( state.categories, key, entry );
 
     },
 
-    delCategory( state, key ) {
-        this._vm.$delete( state.categories, key );
+    renameCategory( state, { oKey, nKey } ) {
+
+        if ( oKey === nKey ) { return; }
+
+        const old = state.categories[ oKey ];
+        if ( old.parent ) {
+            childReplace( state.categories[ old.parent ].children, oKey, nKey );
+        }
+
+        forKey( state, old.children, nKey );
+
+        this._vm.$set( state.categories, nKey, old );
+        this._vm.$delete( state.categories, oKey );
+
     },
+
+    delCategory( state, key ) {
+
+        const children = state.categories[ key ].children;
+        forKey( state, children, null );
+
+        this._vm.$delete( state.categories, key );
+
+    },
+
+    //
 
     addArticle( state, { key, article } ) {
 
@@ -61,15 +90,31 @@ export const mutations = {
         this._vm.$delete( state.categories[ key ].articles, articleId );
     },
 
-    changeParent( state, { key, parent } ) {
+    updArticles( state, { key, articles } ) {
+        if ( !state.categories[ key ] ) { return; }
+        this._vm.$set( state.categories[ key ], 'articles', articles );
+    },
+
+    //
+
+    changeParent( state, { key, newParent } ) {
+
 
         const item = state.categories[ key ];
-        if ( !item ) { return; }
+        if ( !item || item.parent === newParent ) { return; }
 
-        const hasParent = state.categories[ parent ]?.parent ?? false;
-        if ( hasParent ) { return; }
+        const notFirst = state.categories[ newParent ]?.parent ?? false;
+        const children = item.children.length > 0;
 
-        this._vm.$set( state.categories[ key ], 'parent', parent );
+        if ( notFirst || children ) { return; }
+
+        if ( item.parent ) {
+            childReplace( state.categories[ item.parent ].children, key );
+        }
+
+        // Set
+        state.categories[ newParent ].children.push( key );
+        this._vm.$set( state.categories[ key ], 'parent', newParent );
 
     },
 

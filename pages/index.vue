@@ -2,15 +2,17 @@
     <section class="container">
 
         <!-- Header -->
-        <header-box />
+        <head-box />
 
         <!-- Grid -->
         <grid />
 
         <!-- Modals -->
         <modal-category ref="modalNew" title="Новая категория" />
-        <modal-category ref="ModalChg" title="Редактирование категории" />
-        <modal-articles ref="modalArt" title="Изменения расположения статьи" />
+        <modal-category ref="modalChg" title="Редактирование категории" />
+        <modal-articles ref="modalArt" title="Изменение расположения статьи" />
+        <modal-sub-arts ref="modalSub" title="Изменение статьи" />
+        <modal-question ref="modalQst" title="Удалить категорию?" />
 
     </section>
 </template>
@@ -22,13 +24,14 @@ export default {
         this.$root.$on( 'setVisible', this.setVisible );
     },
 
-    beforeDestroy() {
-        this.$root.$off( 'setVisible' );
-    },
+    // beforeDestroy() {
+    //     this.$root.$off( 'setVisible' );
+    // },
 
     methods: {
-        setVisible( [ modal, arg ] ) {
-            this.$refs[ modal ].$refs.xmodal.isVisible = arg;
+        setVisible( { modal, arg } ) {
+            const xmodal = this.$refs[ modal ].$refs.xmodal;
+            xmodal.show( arg || null );
         }
     }
 

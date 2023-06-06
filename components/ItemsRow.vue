@@ -1,11 +1,13 @@
 <template>
-    <div class="items-row">
-        <div v-for="(article, index) in articles.slice( 0, 15 )" :key="article.id">
-            <div class="articles-item">
-                <button class="btn btn-tag" @click="deleteHandler( index )">
-                    <img src="/svg/delete.svg" alt="">
-                </button>
-                {{ article.title.slice( 0, 20 ) }}
+    <div class="items-wrapper">
+        <div class="items-row">
+            <div v-for="(article, index) in articles" :key="index">
+                <div class="articles-item">
+                    <button class="btn btn-tag" @click="deleteHandler( index )">
+                        <img src="/svg/delete.svg" alt="">
+                    </button>
+                    {{ article.title.slice( 0, 20 ) }}
+                </div>
             </div>
         </div>
     </div>
@@ -28,38 +30,47 @@ export default {
 </script>
 
 <style lang="scss">
-.items-row {
+.items {
 
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    &-wrapper {
 
-    font-size: 12px;
-
-    & :not(:last-child) {
-        margin-right: 10px;
+        height: 230px;
+        overflow-y: scroll;
     }
 
-    .articles-item {
+    &-row {
 
         display: flex;
-        flex-direction: row;
-        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-start;
 
-        width: 200px;
+        font-size: 12px;
 
-        .btn {
-
+        & :not(:last-child) {
             margin-right: 10px;
-            margin-top: 5px;
-
-            width: 32px;
-            height: 32px;
         }
 
-        img {
-            width: 100%;
-            height: 100%;
+        .articles-item {
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            width: 200px;
+
+            .btn {
+
+                margin-right: 10px;
+                margin-top: 5px;
+
+                width: 32px;
+                height: 32px;
+            }
+
+            img {
+                width: 100%;
+                height: 100%;
+            }
         }
     }
 }

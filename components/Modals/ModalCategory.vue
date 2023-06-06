@@ -5,16 +5,16 @@
         <div>
 
             <!-- Title -->
-            <h3 class="title my-x">{{ title }}</h3>
+            <h3 class="title mt-x mb-1">{{ title }}</h3>
 
             <!-- Controls -->
             <div class="controls">
 
-                <!-- Category -->
-                <x-input holder="Название" :show-icon="false" class="mb-x" @input="( e ) => selectedName = e" />
+                <!-- Category input-->
+                <x-input v-model="name" :show-icon="false" holder="Название" class="mb-x" />
 
                 <!-- Parent category -->
-                <x-select :hint="'Родительская категория'" class="mb-x">
+                <x-select :preselect="parent" :hint="'Родительская категория'" class="mb-x">
                     <x-option v-for="( name, index ) in $store.getters.getCategories" :key="index"
                               :index="index"
                               :content="name"
@@ -30,7 +30,7 @@
                 </x-select>
 
                 <!-- Article row -->
-                <items-row :articles="selectedArticles"
+                <items-row :articles="articles"
                            @delete-article="( index ) => { deleteHandler( index ); }" />
 
             </div>
@@ -48,31 +48,53 @@ export default {
 
     data() {
         return {
-            selectedName: '',
-            selectedParent: null,
-            selectedArticles: []
+            name: '',
+            parent: null,
+            articles: [],
+            editMode: null
         };
     },
 
     methods: {
 
         clickParentHandler( name ) {
-            this.selectedParent = name;
+            this.parent = name;
         },
 
         clickArticlesHandler( article ) {
-            this.selectedArticles.push( article );
+            this.articles.push( article );
         },
 
         deleteHandler( index ) {
-            this.selectedArticles.splice( index, 1 );
+            this.articles.splice( index, 1 );
+        },
+
+        setContext( arg ) {
+
+            if ( !arg ) { return; }
+            const category = this.$store.state.categories[ arg ];
+
+            this.name = arg;
+            this.parent = category.parent || null;
+            this.articles = Object.values( category.articles );
+
+            this.editMode = arg;
+
         },
 
         apply() {
 
-            if ( this.selectedName !== '' ) {
-                this.$store.commit( 'addCategory', { key: this.selectedName, parent: this.selectedParent } );
-                this.$store.commit( 'addArticles', { key: this.selectedName, articles: this.selectedArticles } );
+            if ( this.name === '' ) { return; }
+
+            if ( this.editMode ) {
+                this.$store.commit( 'renameCategory', { oKey: this.editMode, nKey: this.name } );
+                this.$store.commit( 'changeParent', { key: this.name, newParent: this.parent } );
+                this.$store.commit( 'updArticles', { key: this.name, articles: this.articles } );
+            }
+
+            if ( !this.editMode ) {
+                this.$store.commit( 'addCategory', { key: this.name, parent: this.parent } );
+                this.$store.commit( 'addArticles', { key: this.name, articles: this.articles } );
             }
 
             // Close
@@ -82,9 +104,11 @@ export default {
 
         clear() {
 
-            this.selectedName = '';
-            this.selectedParent = null;
-            this.selectedArticles = [];
+            this.name = '';
+            this.parent = null;
+            this.articles = [];
+
+            this.editMode = null;
 
         }
     }

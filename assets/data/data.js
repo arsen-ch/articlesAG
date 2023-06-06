@@ -41,8 +41,10 @@ function samplesGenerator( iters ) {
 export const fetchedData = samplesGenerator( 20 );
 
 export const sample = {
-    'Название категории': {
+    'Начальный заголовок': {
+        timestamp: 0,
         parent: null,
+        children: [ 'Название подкатегории', 'Подкатегория 2' ],
         articles: {
             0: {
                 id: 0,
@@ -95,8 +97,10 @@ export const sample = {
             }
         }
     },
-    'Название субкатегории': {
-        parent: 'Название категории',
+    'Название подкатегории': {
+        timestamp: 1,
+        parent: 'Начальный заголовок',
+        children: [],
         articles: {
             1: {
                 id: 1,
@@ -114,8 +118,31 @@ export const sample = {
             }
         }
     },
-    'Название второй категории': {
+    'Вторая категория': {
+        timestamp: 2,
         parent: null,
+        children: [],
+        articles: {
+            2: {
+                id: 2,
+                title: 'Нужно лишь только...',
+                image: 'img/card-bg.jpg',
+                texts: 'Краткое описание',
+                likes: 54
+            },
+            6: {
+                id: 6,
+                title: 'Новая статья',
+                image: 'img/card-bg.jpg',
+                texts: 'Описание статьи',
+                likes: 76
+            }
+        }
+    },
+    'Подкатегория 2': {
+        timestamp: 3,
+        parent: 'Начальный заголовок',
+        children: [],
         articles: {
             2: {
                 id: 2,

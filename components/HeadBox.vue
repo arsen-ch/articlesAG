@@ -3,9 +3,10 @@
         <div class="search-bar mb-2">
 
             <!-- Create button -->
-            <button class="btn" @click="$root.$emit( 'setVisible', [ 'modalNew', true ] )">
+            <button class="btn" @click="clickHandler()">
                 Создать категорию
-                <img class="vertical-center" src="svg/plus.svg"></button>
+                <img class="vertical-center" src="svg/plus.svg">
+            </button>
 
             <!-- Search field -->
             <x-input />
@@ -15,7 +16,15 @@
 </template>
 
 <script>
-export default {};
+export default {
+
+    methods: {
+        clickHandler() {
+            this.$root.$emit( 'setVisible', { modal: 'modalNew' } );
+        }
+    }
+
+};
 </script>
 
 <style lang="scss">

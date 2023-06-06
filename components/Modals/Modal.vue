@@ -2,9 +2,9 @@
     <transition name="modal">
 
         <!-- Anchor -->
-        <div v-if="isVisible" ref="root" class="dimmer active" :style="{ position: 'fixed' }">
+        <div v-if="isVisible" class="dimmer active" :style="{ position: 'fixed' }">
 
-            <!-- Modal window -->
+            <!-- Modal Window -->
             <div class="modal attached" :class="[ attached ]" @keydown.esc.stop="cancelHandler()">
 
                 <!-- Content -->
@@ -18,8 +18,8 @@
                         <hr>
                         <!-- Buttons -->
                         <div class="footer">
-                            <button class="btn" @click="applyHandler()">Сохранить</button>
-                            <button class="btn inactive" @click="cancelHandler()">Отмена</button>
+                            <button class="btn" @click="applyHandler()">{{ captions.apply }}</button>
+                            <button class="btn inactive" @click="cancelHandler()">{{ captions.cancel }}</button>
                         </div>
 
                     </div>
@@ -34,6 +34,10 @@
 export default {
 
     props: {
+        captions: {
+            type: Object,
+            default: () => { return { apply: 'Сохранить', cancel: 'Отмена' }; }
+        },
         attached: { type: String, default: 'center' },
         padding: { type: String, default: '32px' },
         visible: { type: Boolean, default: true },
@@ -43,15 +47,31 @@ export default {
 
     data() {
         return {
-            isVisible: false
+            isVisible: false,
+            arg: null
         };
     },
 
-    mounted() {
-        // this.$refs.root.$el.focus();
+    watch: {
+
+        isVisible() {
+            const ctx = this.$slots.default[ 0 ].context;
+            ctx.setContext( this.arg );
+        }
+
     },
 
     methods: {
+
+        show( arg ) {
+            this.isVisible = true;
+            this.arg = arg;
+        },
+
+        close() {
+            this.isVisible = false;
+            this.arg = null;
+        },
 
         applyHandler() {
 
@@ -65,18 +85,15 @@ export default {
 
         cancelHandler() {
 
-            this.isVisible = false;
-
-            // Close
             const ctx = this.$slots.default[ 0 ].context;
             ctx.clear();
 
-        },
+            // Close
+            this.close();
 
-        setVisible( arg = true ) {
-            this.isVisible = arg;
         }
     }
+
 };
 
 </script>

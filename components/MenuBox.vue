@@ -6,8 +6,8 @@
         <transition name="menu">
             <ul v-show="menuVisible" class="menu popup">
 
-                <li class="item" @click="$root.$emit( 'setVisible', [ 'ModalChg', true ] )"> Редактировать </li>
-                <li class="item" @click="deleteHandler()"> Удалить </li>
+                <li class="item" @click="editHandler()">Редактировать</li>
+                <li class="item" @click="deleteHandler()">Удалить</li>
 
             </ul>
         </transition>
@@ -20,6 +20,10 @@ import clickoutside from './_ui/clickoutside';
 export default {
 
     directives: { clickoutside },
+
+    props: {
+        category: { type: String, default: '' }
+    },
 
     data() {
         return {
@@ -38,11 +42,11 @@ export default {
         },
 
         editHandler() {
-            console.log( 'edit' );
+            this.$root.$emit( 'setVisible', { modal: 'modalChg', arg: this.category } );
         },
 
         deleteHandler() {
-            console.log( 'delete' );
+            this.$root.$emit( 'setVisible', { modal: 'modalQst', arg: this.category } );
         }
 
     }

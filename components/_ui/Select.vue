@@ -6,17 +6,18 @@
          @mouseover="showClear = true"
          @mouseout="showClear = false">
 
-        <!-- <i :class="iconDownArrow" /> -->
-
         <!-- Search -->
         <input ref="searchInput"
                autocomplete="off"
                @input.stop="searchInputHandler( $event.target.value )" />
 
-        <!-- Text -->
-        <div :class="[ 'text', { 'hint': valueEmpty } ]"
+        <!--  Text -->
+        <div :class="[ 'text', { 'hint': ( !preselect && !selectedItem ) } ]"
              :style="{ visibility: showText ? 'visible' : 'hidden' }">
-            {{ selectedItems.length > 0 && selectedItems[ 0 ].content || hint }}
+            {{ ( selectedItem && selectedItem.content ) || ( preselect || hint ) }}
+
+            <div class="icon"><img class="rotate0" :class="{ rotate180: visible }" src="/svg/chevron-down.svg" alt=""></div>
+
         </div>
 
         <!-- Options -->
@@ -40,70 +41,30 @@ export default {
 
     props: {
         id: { type: String, default: '' },
-        value: { type: [ Number, String, Array ], default: '' },
         hint: { type: String, default: '' },
         width: { type: Number, default: 160 },
-        disabled: { type: Boolean, default: false }
+        disabled: { type: Boolean, default: false },
+        preselect: { type: [ String, Number, null ], default: null }
     },
 
     data() {
         return {
             visible: false,
-            selectedItems: [],
             showText: true,
-            reRenderChildren: false,
             showClear: false,
-            displayItems: [],
+            selectedItem: null,
+            reRenderChildren: false,
             keyChildrenIndex: -1
         };
     },
 
-    computed: {
-
-        valueEmpty() {
-            return this.values.length === 0;
-        },
-
-        values() {
-            return Array.isArray( this.value )
-                ? this.value
-                : ( this.value && this.value.toString() !== ''
-                    ? [ this.value ]
-                    : [] );
-        }
-    },
-
     watch: {
-        value( _n, _o ) {
-            this.initData();
-        },
-
         visible() {
             this.$emit( 'visible', { id: this.id, visible: this.visible } );
         }
     },
 
-    mounted() {
-        this.initData();
-    },
-
     methods: {
-
-        initData() {
-
-            this.selectedItems = [];
-            this.$children.forEach( ( el ) => {
-                el.$el.style.display = 'block';
-                if ( this.values.includes( el.index ) ) {
-                    el.active = true;
-                    this.selectedItems.push( el );
-                } else {
-                    el.active = false;
-                }
-            } );
-
-            this.displayItems = this.$children;
-        },
 
         searchInputHandler( v ) {
 
@@ -140,7 +101,7 @@ export default {
 
             if ( !comp ) { return; }
 
-            this.selectedItems.splice( 0, 1, comp );
+            this.selectedItem = comp;
             this.emitChange( [ comp.index ] );
             this.awayHandler();
 
