@@ -5,13 +5,21 @@
         <head-box />
 
         <!-- Grid -->
-        <grid />
+        <grid-box />
 
-        <!-- Modals -->
+        <!-- New category -->
         <modal-category ref="modalNew" title="Новая категория" />
+
+        <!-- Edit category  -->
         <modal-category ref="modalChg" title="Редактирование категории" />
+
+        <!-- Change placement  -->
         <modal-articles ref="modalArt" title="Изменение расположения статьи" />
+
+        <!-- Delete category -->
         <modal-question ref="modalQst" title="Удалить категорию?" />
+
+        <!-- dyn comp -->
 
     </section>
 </template>
@@ -31,19 +39,21 @@ export default {
     },
 
     mounted() {
+
         this.$store.commit( 'setContent' );
         this.$root.$on( 'setVisible', this.setVisible );
+
     },
 
-    // beforeDestroy() {
-    //     this.$root.$off( 'setVisible' );
-    // },
-
     methods: {
+
         setVisible( { modal, arg } ) {
+
             const xmodal = this.$refs[ modal ].$refs.xmodal;
             xmodal.show( arg || null );
+
         }
+
     }
 
 };
@@ -67,6 +77,8 @@ body {
     font-family: $font-body;
     font-size: $font-base-size;
     padding: 64px;
+
+    overflow-y: scroll;
 }
 
 hr {
@@ -83,7 +95,6 @@ hr {
 .fade-enter,
 .fade-leave-to {
     opacity: 0;
-    transform: scale(1.03);
 }
 
 //

@@ -1,0 +1,66 @@
+$input-padding-sm: 20px;
+
+$collapse-border: 1px solid #f1f2f5;
+$collapse-padding: 0; // .7em 0.8em;
+$collapse-hover-bg: #f1f2f5;
+
+$padding-vertical: 0.785em;
+$padding-horizontal: 0.925em;
+
+.collapse {
+
+    >.item {
+
+        transition: all .3s;
+        position: relative;
+
+
+        &.active {
+            background: white;
+            border-color: white;
+        }
+
+        &.active .rotate0 {
+            transition: transform 0.2s;
+            transform: rotate(180deg);
+        }
+
+        &.active>.content {
+            display: block;
+        }
+
+        >.caption {
+
+            padding: 0;
+
+            .title {
+
+                cursor: pointer;
+
+                &:hover {
+                    color: $color-accent !important;
+                }
+            }
+
+            .subtitle {
+
+                cursor: pointer;
+
+                &:hover {
+                    color: $color-accent !important;
+                }
+            }
+        }
+
+        img {
+            cursor: pointer;
+        }
+
+        // >.content {
+
+        //     // display: none;
+        //     // padding: 0;
+
+        // }
+    }
+}

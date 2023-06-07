@@ -2,17 +2,19 @@
     <transition name="modal">
 
         <!-- Anchor -->
-        <div v-if="isVisible" class="dimmer active" :style="{ position: 'fixed' }">
+        <div v-if="isVisible" class="dimmer active" :style="{ position: 'fixed' }" @keydown.esc.stop="cancelHandler()">
 
             <!-- Modal Window -->
-            <div class="modal attached" :class="[ attached ]" @keydown.esc.stop="cancelHandler()">
+            <div class="modal">
 
                 <!-- Content -->
-                <div class="modal-content" :style="`width: ${width}px; height: ${height}px; padding: ${padding}`">
+                <div class="modal-content"
+                     :class="{ 'modal-error': error }"
+                     :style="`width: ${width}px; height: ${height}px; padding: ${padding}`">
 
                     <!-- Slot -->
                     <div>
-                        <slot @error="applyError()" />
+                        <slot />
                     </div>
 
                     <!-- Footer -->
@@ -41,7 +43,6 @@ export default {
             type: Object,
             default: () => { return { apply: 'Сохранить', cancel: 'Отмена' }; }
         },
-        attached: { type: String, default: 'center' },
         padding: { type: String, default: '32px' },
         visible: { type: Boolean, default: true },
         width: { type: [ Number, String ], default: 760 },
@@ -80,8 +81,10 @@ export default {
         applyError() {
 
             // a.
-            this.error = true;
-            setTimeout( () => { this.error = false; }, 1500 );
+            if ( !this.error ) {
+                this.error = true;
+                setTimeout( () => { this.error = false; }, 1000 );
+            }
 
         },
 
@@ -113,17 +116,18 @@ export default {
 <style lang="scss">
 @import "~/assets/styles/vars.scss";
 
+$error-border: 2px;
+
 .modal {
 
     border-radius: $border-radius;
-    z-index: 999;
 
-    &.attached.center {
-        position: absolute;
-        transform: translate(-50%, -50%);
-        top: 50%;
-        left: 50%;
-    }
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+
+    z-index: 999;
 
     &-content {
 
@@ -131,9 +135,11 @@ export default {
         flex-direction: column;
         justify-content: space-between;
 
-        text-align: left;
         background: white;
+        border: $error-border solid rgba(0, 0, 0, 0);
         border-radius: 10px;
+
+        text-align: left;
         width: 100%;
         height: 100%;
     }
@@ -167,23 +173,44 @@ export default {
 }
 
 // a.
-.error {
-    border: 3px solid rgba(0, 0, 0, 0);
-    animation: error 0.8s ease-in-out both;
+.modal-error {
+    animation: horizontal-shaking 0.8s ease-in-out both, red-border 0.8s ease-in-out both;
 }
 
-@keyframes error {
-
+@keyframes horizontal-shaking {
     0% {
-        border-color: white;
+        transform: translateX(0)
+    }
+
+    25% {
+        transform: translateX(5px)
     }
 
     50% {
-        border-color: rgb(248, 179, 179);
+        transform: translateX(-5px)
+    }
+
+    75% {
+        transform: translateX(5px)
     }
 
     100% {
-        border-color: white;
+        transform: translateX(0)
+    }
+}
+
+@keyframes red-border {
+
+    0% {
+        border-color: rgba(0, 0, 0, 0);
+    }
+
+    50% {
+        border-color: rgb(255, 0, 0);
+    }
+
+    100% {
+        border-color: rgba(0, 0, 0, 0);
 
     }
 }

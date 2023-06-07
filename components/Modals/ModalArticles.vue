@@ -15,7 +15,7 @@
             </x-select>
 
             <!-- Category row -->
-            <items-row :articles="articles" @delete-article="( key ) => { deleteHandler( key ); }" />
+            <items-row :array="categories" @delete-article="( key ) => { deleteHandler( key ); }" />
 
         </div>
     </modal>
@@ -30,38 +30,52 @@ export default {
 
     data() {
         return {
-            entryId: null,
-            articles: []
+            entry: {},
+            categories: []
         };
     },
 
     methods: {
 
         setContext( arg ) {
-            this.entryId = arg?.id || null;
-            this.articles = structuredClone( this.$store.getters.getArticle( this.entryId ) );
+
+            if ( arg ) {
+                this.entry = arg.entry;
+                this.categories = structuredClone( this.$store.getters.getArticle( this.entry.id ) );
+            }
+
         },
 
         clickParentHandler( key ) {
 
-            if ( this.articles.includes( key ) ) {
-                this.$emit( 'error' );
+            // Error
+            if ( this.categories.includes( key ) ) {
+                this.$refs.xmodal.applyError();
                 return;
             }
 
-            this.articles.push( key );
+            this.categories.push( key );
         },
 
         deleteHandler( key ) {
-            this.articles.splice( this.articles.indexOf( key ), 1 );
+            this.categories.splice( this.categories.indexOf( key ), 1 );
         },
 
         apply() {
 
-            // this.$store.commit( 'delArticle', { key: this.category, articleId: this.id } );
+            const raw = this.$store.getters.getArticle( this.entry.id );
+
+            // Delete
+            const ints = this.categories.filter( x => raw.includes( x ) );
+            const diff = raw.filter( x => !ints.includes( x ) );
+            this.$store.commit( 'delArticleFromCategories', { keys: diff, articleId: this.entry.id } );
+
+            // Add
+            const outs = this.categories.filter( x => !raw.includes( x ) );
+            this.$store.commit( 'addArticleToCategories', { keys: outs, article: this.entry } );
 
             // Close
-            this.clear();
+            // this.clear();
 
         },
 

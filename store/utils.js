@@ -4,7 +4,7 @@ export function flatDict( entries, categories ) {
     entries = entries.sort( ( a, b ) => b[ 1 ].timestamp - a[ 1 ].timestamp );
 
     const content = {};
-    const articles = {};
+    const registry = {};
 
     // #1 pass
     const excluded = [];
@@ -18,8 +18,8 @@ export function flatDict( entries, categories ) {
 
         // Articles invert
         for ( const id of Object.keys( category.articles ) ) {
-            articles[ id ] = articles[ id ] || [];
-            articles[ id ].push( key );
+            registry[ id ] = registry[ id ] || [];
+            registry[ id ].push( key );
         }
 
     }
@@ -29,7 +29,7 @@ export function flatDict( entries, categories ) {
         content[ category.parent ].subs[ key ] = Object.values( categories[ key ].articles );
     }
 
-    return { content, articles };
+    return { content, registry };
 
 }
 

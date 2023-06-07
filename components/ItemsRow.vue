@@ -4,8 +4,8 @@
 
             <transition-group name="fade" tag="div" class="row" @before-leave="beforeLeave">
 
-                <div v-for="(article, key) in articles" :key="article">
-                    <div class="articles-item">
+                <div v-for="(article, key) in array" :key="article?.title ? article.id : article">
+                    <div class="array-item">
 
                         <button class="btn btn-tag" @click="deleteHandler( article?.title ? key : article )">
                             <img src="/svg/delete.svg" alt="">
@@ -25,7 +25,7 @@
 export default {
 
     props: {
-        articles: { type: [ Object, Array ], default: () => { } }
+        array: { type: [ Object, Array ], default: () => { } }
     },
 
     methods: {
@@ -67,7 +67,7 @@ export default {
             margin-right: 10px;
         }
 
-        .articles-item {
+        .array-item {
 
             display: flex;
             flex-direction: row;

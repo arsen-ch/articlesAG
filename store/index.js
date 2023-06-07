@@ -3,10 +3,10 @@ import { fetchedData, sample } from '~/assets/data/data.js';
 
 export const state = () => ( {
 
-    articlesData: fetchedData,
+    articles: fetchedData,
 
     categories: sample,
-    articles: {},
+    registry: {},
     content: [],
 
     isLoading: false
@@ -89,6 +89,15 @@ export const mutations = {
 
     },
 
+    addArticleToCategories( state, { keys, article } ) {
+
+        for ( const key of keys ) {
+            if ( !state.categories[ key ] ) { continue; }
+            this._vm.$set( state.categories[ key ].articles, article.id, article );
+        }
+
+    },
+
     delArticle( state, { key, articleId } ) {
 
         if ( !state.categories[ key ] ) { return; }
@@ -96,10 +105,12 @@ export const mutations = {
 
     },
 
-    delFromCategory( state, { key, articleId } ) {
+    delArticleFromCategories( state, { keys, articleId } ) {
 
-        if ( !state.categories[ key ] ) { return; }
-        this._vm.$delete( state.categories[ key ].articles, articleId );
+        for ( const key of keys ) {
+            if ( !state.categories[ key ] ) { continue; }
+            this._vm.$delete( state.categories[ key ].articles, articleId );
+        }
 
     },
 
@@ -146,9 +157,9 @@ export const mutations = {
     setContent( state ) {
 
         const entries = Object.entries( state.categories );
-        const { articles, content } = flatDict( entries, state.categories );
+        const { registry, content } = flatDict( entries, state.categories );
 
-        this._vm.$set( state, 'articles', articles );
+        this._vm.$set( state, 'registry', registry );
         this._vm.$set( state, 'content', content );
 
     }
@@ -158,17 +169,17 @@ export const mutations = {
 export const getters = {
 
     getArticlesData( state ) {
-        return state.articlesData;
+        return state.articles;
     },
 
     getArticle( state ) {
         return ( key ) => {
-            return state.articles[ key ] || [];
+            return state.registry[ key ] || [];
         };
     },
 
     getArticles( state ) {
-        return state.articles;
+        return state.registry;
     },
 
     getContent( state ) {

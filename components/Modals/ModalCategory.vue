@@ -27,7 +27,7 @@
             </x-select>
 
             <!-- Article row -->
-            <items-row :articles="articles" @delete-article="( key ) => { deleteHandler( key ); }" />
+            <items-row :array="articles" @delete-article="( key ) => { deleteHandler( key ); }" />
 
         </div>
     </modal>
