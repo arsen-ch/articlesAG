@@ -11,7 +11,6 @@
         <modal-category ref="modalNew" title="Новая категория" />
         <modal-category ref="modalChg" title="Редактирование категории" />
         <modal-articles ref="modalArt" title="Изменение расположения статьи" />
-        <modal-sub-arts ref="modalSub" title="Изменение статьи" />
         <modal-question ref="modalQst" title="Удалить категорию?" />
 
     </section>
@@ -20,7 +19,19 @@
 <script>
 export default {
 
+    watch: {
+
+        '$store.state.categories': {
+            handler() {
+                this.$store.commit( 'setContent' );
+            },
+            deep: true
+        }
+
+    },
+
     mounted() {
+        this.$store.commit( 'setContent' );
         this.$root.$on( 'setVisible', this.setVisible );
     },
 
@@ -73,5 +84,33 @@ hr {
 .fade-leave-to {
     opacity: 0;
     transform: scale(1.03);
+}
+
+//
+
+.slide-enter-active,
+.slide-leave-active,
+.slide-move {
+    transition: 500ms cubic-bezier(0.59, 0.12, 0.34, 0.95);
+    transition-property: all;
+}
+
+.slide-enter {
+    opacity: 0;
+    transform: translateX(50px) scaleY(0.5);
+}
+
+.slide-enter-to {
+    opacity: 1;
+    transform: scaleY(1);
+}
+
+.slide-leave-active {
+    position: absolute;
+}
+
+.slide-leave-to {
+    opacity: 0;
+    transform-origin: center center;
 }
 </style>

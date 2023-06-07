@@ -8,16 +8,19 @@
             <div class="modal attached" :class="[ attached ]" @keydown.esc.stop="cancelHandler()">
 
                 <!-- Content -->
-                <div class="modal-content"
-                     :style="`width: ${width}px; height: ${height}px; padding: ${padding}`">
-                    <slot />
+                <div class="modal-content" :style="`width: ${width}px; height: ${height}px; padding: ${padding}`">
+
+                    <!-- Slot -->
+                    <div>
+                        <slot @error="applyError()" />
+                    </div>
 
                     <!-- Footer -->
                     <div>
 
                         <hr>
                         <!-- Buttons -->
-                        <div class="footer">
+                        <div class="modal-footer">
                             <button class="btn" @click="applyHandler()">{{ captions.apply }}</button>
                             <button class="btn inactive" @click="cancelHandler()">{{ captions.cancel }}</button>
                         </div>
@@ -48,6 +51,7 @@ export default {
     data() {
         return {
             isVisible: false,
+            error: false,
             arg: null
         };
     },
@@ -71,6 +75,14 @@ export default {
         close() {
             this.isVisible = false;
             this.arg = null;
+        },
+
+        applyError() {
+
+            // a.
+            this.error = true;
+            setTimeout( () => { this.error = false; }, 1500 );
+
         },
 
         applyHandler() {
@@ -126,13 +138,7 @@ export default {
         height: 100%;
     }
 
-    .controls {
-
-        display: flex;
-        flex-direction: column;
-    }
-
-    .footer {
+    &-footer {
 
         display: flex;
         justify-content: space-between;
@@ -158,5 +164,27 @@ export default {
 .modal-leave-to {
     opacity: 0;
     transform: scale(1.05);
+}
+
+// a.
+.error {
+    border: 3px solid rgba(0, 0, 0, 0);
+    animation: error 0.8s ease-in-out both;
+}
+
+@keyframes error {
+
+    0% {
+        border-color: white;
+    }
+
+    50% {
+        border-color: rgb(248, 179, 179);
+    }
+
+    100% {
+        border-color: white;
+
+    }
 }
 </style>

@@ -1,27 +1,21 @@
 <template>
     <modal ref="xmodal">
 
-        <!-- Content -->
-        <div>
+        <!-- Title -->
+        <h3 class="title mt-x mb-1">{{ title }}</h3>
 
-            <!-- Title -->
-            <h3 class="title mt-x mb-1">{{ title }}</h3>
+        <div class="controls">
 
-            <div class="controls">
+            <!-- Parent category -->
+            <x-select :hint="'Родительская категория'" class="mb-x">
+                <x-option v-for="( name, index ) in $store.getters.getCategories" :key="index"
+                          :index="index"
+                          :content="name"
+                          @click="clickParentHandler( name )" />
+            </x-select>
 
-                <!-- Parent category -->
-                <x-select :hint="'Родительская категория'" class="mb-x">
-                    <x-option v-for="( name, index ) in $store.getters.getCategories" :key="index"
-                              :index="index"
-                              :content="name"
-                              @click="clickParentHandler( name )" />
-                </x-select>
-
-                <!-- Category row -->
-                <items-row :articles="articles"
-                           @delete-article="( index ) => { deleteHandler( index ); }" />
-
-            </div>
+            <!-- Category row -->
+            <items-row :articles="articles" @delete-article="( key ) => { deleteHandler( key ); }" />
 
         </div>
     </modal>
@@ -36,29 +30,35 @@ export default {
 
     data() {
         return {
-            parent: null,
+            entryId: null,
             articles: []
         };
     },
 
     methods: {
 
-        clickParentHandler( name ) {
-            this.parent = name;
+        setContext( arg ) {
+            this.entryId = arg?.id || null;
+            this.articles = structuredClone( this.$store.getters.getArticle( this.entryId ) );
         },
 
-        deleteHandler( index ) {
-            this.articles.splice( index, 1 );
+        clickParentHandler( key ) {
+
+            if ( this.articles.includes( key ) ) {
+                this.$emit( 'error' );
+                return;
+            }
+
+            this.articles.push( key );
         },
 
-        setContext() { },
+        deleteHandler( key ) {
+            this.articles.splice( this.articles.indexOf( key ), 1 );
+        },
 
         apply() {
 
-            // if ( this.selectedName !== '' ) {
-            //     this.$store.commit( 'addCategory', { key: this.selectedName, parent: this.parent } );
-            //     this.$store.commit( 'addArticles', { key: this.selectedName, articles: this.articles } );
-            // }
+            // this.$store.commit( 'delArticle', { key: this.category, articleId: this.id } );
 
             // Close
             this.clear();
@@ -66,9 +66,12 @@ export default {
         },
 
         clear() {
-            this.parent = null;
+
+            // this.id = null;
+            // this.parent = null;
+            // this.category = null;
+
         }
     }
 };
-
 </script>

@@ -80,16 +80,17 @@ export default {
 
         addLike() {
 
+            // Like
             this.$store.commit( 'addLike', { key: this.category, id: this.entry.id } );
 
-            // Anim
+            // a.
             this.likeIt = true;
             setTimeout( () => { this.likeIt = false; }, 1500 );
 
         },
 
         editCard() {
-            this.$root.$emit( 'setVisible', { modal: 'modalArt' } );
+            this.$root.$emit( 'setVisible', { modal: 'modalArt', arg: { id: this.entry.id, category: this.category } } );
         }
     }
 

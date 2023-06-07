@@ -27,7 +27,7 @@ function samplesGenerator( iters ) {
             title: titles[ Math.floor( Math.random() * titles.length ) ],
             image: 'img/card-bg.jpg',
             texts: script[ Math.floor( Math.random() * titles.length ) ],
-            likes: Math.floor( Math.random() * 100 )
+            likes: Math.floor( Math.random() * 100 ) || 0
         };
 
         samples.push( sample );

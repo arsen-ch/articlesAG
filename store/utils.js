@@ -3,31 +3,33 @@ export function flatDict( entries, categories ) {
     // Sort
     entries = entries.sort( ( a, b ) => b[ 1 ].timestamp - a[ 1 ].timestamp );
 
-    const result = {};
+    const content = {};
+    const articles = {};
 
     // #1 pass
     const excluded = [];
     for ( const [ key, category ] of entries ) {
 
         if ( !category.parent ) {
-            result[ key ] = { main: Object.values( category.articles ), subs: {} };
+            content[ key ] = { main: Object.values( category.articles ), subs: {} };
         } else {
             excluded.push( [ key, category ] );
+        }
+
+        // Articles invert
+        for ( const id of Object.keys( category.articles ) ) {
+            articles[ id ] = articles[ id ] || [];
+            articles[ id ].push( key );
         }
 
     }
 
     // #2 pass
     for ( const [ key, category ] of excluded ) {
-        result[ category.parent ].subs[ key ] = Object.values( categories[ key ].articles );
+        content[ category.parent ].subs[ key ] = Object.values( categories[ key ].articles );
     }
 
-    // #3 pass
-    // const sorted = Object.keys( result ).sort().reduce( ( obj, key ) => {
-    //     obj[ key ] = result[ key ]; return obj;
-    // }, {} );
-
-    return result;
+    return { content, articles };
 
 }
 

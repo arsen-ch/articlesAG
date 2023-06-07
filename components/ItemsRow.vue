@@ -1,14 +1,22 @@
 <template>
     <div class="items-wrapper">
         <div class="items-row">
-            <div v-for="(article, index) in articles" :key="index">
-                <div class="articles-item">
-                    <button class="btn btn-tag" @click="deleteHandler( index )">
-                        <img src="/svg/delete.svg" alt="">
-                    </button>
-                    {{ article.title.slice( 0, 20 ) }}
+
+            <transition-group name="fade" tag="div" class="row" @before-leave="beforeLeave">
+
+                <div v-for="(article, key) in articles" :key="article">
+                    <div class="articles-item">
+
+                        <button class="btn btn-tag" @click="deleteHandler( article?.title ? key : article )">
+                            <img src="/svg/delete.svg" alt="">
+                        </button>
+                        {{ article?.title ? article.title.slice( 0, 20 ) : article }}
+
+                    </div>
                 </div>
-            </div>
+
+            </transition-group>
+
         </div>
     </div>
 </template>
@@ -17,12 +25,21 @@
 export default {
 
     props: {
-        articles: { type: Array, default: () => [] }
+        articles: { type: [ Object, Array ], default: () => { } }
     },
 
     methods: {
-        deleteHandler( index ) {
-            this.$emit( 'delete-article', index );
+
+        deleteHandler( key ) {
+            this.$emit( 'delete-article', key );
+        },
+
+        beforeLeave( el ) {
+            const { marginLeft, marginTop, width, height } = window.getComputedStyle( el );
+            el.style.left = `${el.offsetLeft - parseFloat( marginLeft, 10 )}px`;
+            el.style.top = `${el.offsetTop - parseFloat( marginTop, 10 )}px`;
+            el.style.width = width;
+            el.style.height = height;
         }
     }
 
@@ -35,7 +52,7 @@ export default {
     &-wrapper {
 
         height: 230px;
-        overflow-y: scroll;
+        overflow-y: auto;
     }
 
     &-row {

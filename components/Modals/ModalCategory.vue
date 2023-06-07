@@ -1,39 +1,33 @@
 <template>
     <modal ref="xmodal">
 
-        <!-- Content -->
-        <div>
+        <!-- Title -->
+        <h3 class="title mt-x mb-1">{{ title }}</h3>
 
-            <!-- Title -->
-            <h3 class="title mt-x mb-1">{{ title }}</h3>
+        <!-- Controls -->
+        <div class="controls">
 
-            <!-- Controls -->
-            <div class="controls">
+            <!-- Category input-->
+            <x-input v-model="name" :show-icon="false" holder="Название" class="mb-x" />
 
-                <!-- Category input-->
-                <x-input v-model="name" :show-icon="false" holder="Название" class="mb-x" />
+            <!-- Parent category -->
+            <x-select :preselect="parent" :hint="'Родительская категория'" class="mb-x">
+                <x-option v-for="( category, index ) in $store.getters.getCategories" :key="index"
+                          :index="index"
+                          :content="category"
+                          @click="clickParentHandler( category )" />
+            </x-select>
 
-                <!-- Parent category -->
-                <x-select :preselect="parent" :hint="'Родительская категория'" class="mb-x">
-                    <x-option v-for="( name, index ) in $store.getters.getCategories" :key="index"
-                              :index="index"
-                              :content="name"
-                              @click="clickParentHandler( name )" />
-                </x-select>
+            <!-- Insert articles -->
+            <x-select :hint="'Вложенные статьи'" class="mb-x">
+                <x-option v-for="( article, index ) in $store.getters.getArticlesData" :key="index"
+                          :index="index"
+                          :content="article.title"
+                          @click="clickArticlesHandler( article )" />
+            </x-select>
 
-                <!-- Insert articles -->
-                <x-select :hint="'Вложенные статьи'" class="mb-x">
-                    <x-option v-for="( article, index ) in $store.getters.getArticles" :key="index"
-                              :index="index"
-                              :content="article.title"
-                              @click="clickArticlesHandler( article )" />
-                </x-select>
-
-                <!-- Article row -->
-                <items-row :articles="articles"
-                           @delete-article="( index ) => { deleteHandler( index ); }" />
-
-            </div>
+            <!-- Article row -->
+            <items-row :articles="articles" @delete-article="( key ) => { deleteHandler( key ); }" />
 
         </div>
     </modal>
@@ -50,24 +44,12 @@ export default {
         return {
             name: '',
             parent: null,
-            articles: [],
+            articles: {},
             editMode: null
         };
     },
 
     methods: {
-
-        clickParentHandler( name ) {
-            this.parent = name;
-        },
-
-        clickArticlesHandler( article ) {
-            this.articles.push( article );
-        },
-
-        deleteHandler( index ) {
-            this.articles.splice( index, 1 );
-        },
 
         setContext( arg ) {
 
@@ -76,10 +58,22 @@ export default {
 
             this.name = arg;
             this.parent = category.parent || null;
-            this.articles = Object.values( category.articles );
+            this.articles = structuredClone( category.articles );
 
             this.editMode = arg;
 
+        },
+
+        clickParentHandler( name ) {
+            this.parent = name;
+        },
+
+        clickArticlesHandler( article ) {
+            this.$set( this.articles, article.id, article );
+        },
+
+        deleteHandler( key ) {
+            this.$delete( this.articles, key );
         },
 
         apply() {

@@ -3,9 +3,13 @@ import { fetchedData, sample } from '~/assets/data/data.js';
 
 export const state = () => ( {
 
-    articles: fetchedData,
-    isLoading: false,
-    categories: sample // {}
+    articlesData: fetchedData,
+
+    categories: sample,
+    articles: {},
+    content: [],
+
+    isLoading: false
 
 } );
 
@@ -20,7 +24,7 @@ export const actions = {
 
 export const mutations = {
 
-    init( state ) { },
+    // init( state ) { },
 
     addCategory( state, { key, parent } ) {
 
@@ -79,30 +83,40 @@ export const mutations = {
     addArticles( state, { key, articles } ) {
 
         if ( !state.categories[ key ] ) { return; }
-        for ( const article of articles ) {
+        for ( const article of Object.values( articles ) ) {
             this._vm.$set( state.categories[ key ].articles, article.id, article );
         }
 
     },
 
     delArticle( state, { key, articleId } ) {
+
         if ( !state.categories[ key ] ) { return; }
         this._vm.$delete( state.categories[ key ].articles, articleId );
+
+    },
+
+    delFromCategory( state, { key, articleId } ) {
+
+        if ( !state.categories[ key ] ) { return; }
+        this._vm.$delete( state.categories[ key ].articles, articleId );
+
     },
 
     updArticles( state, { key, articles } ) {
+
         if ( !state.categories[ key ] ) { return; }
         this._vm.$set( state.categories[ key ], 'articles', articles );
+
     },
 
     //
 
     changeParent( state, { key, newParent } ) {
 
-
         const item = state.categories[ key ];
-        if ( !item || item.parent === newParent ) { return; }
 
+        if ( !item || item.parent === newParent || key === newParent ) { return; }
         const notFirst = state.categories[ newParent ]?.parent ?? false;
         const children = item.children.length > 0;
 
@@ -122,7 +136,20 @@ export const mutations = {
 
         const entry = state.categories[ key ];
         const likes = entry.articles[ id ].likes;
+
         this._vm.$set( entry.articles[ id ], 'likes', likes + 1 );
+
+    },
+
+    //
+
+    setContent( state ) {
+
+        const entries = Object.entries( state.categories );
+        const { articles, content } = flatDict( entries, state.categories );
+
+        this._vm.$set( state, 'articles', articles );
+        this._vm.$set( state, 'content', content );
 
     }
 
@@ -130,16 +157,22 @@ export const mutations = {
 
 export const getters = {
 
-    getContent( state ) {
+    getArticlesData( state ) {
+        return state.articlesData;
+    },
 
-        const entries = Object.entries( state.categories );
-        const flatted = flatDict( entries, state.categories );
-
-        return flatted;
+    getArticle( state ) {
+        return ( key ) => {
+            return state.articles[ key ] || [];
+        };
     },
 
     getArticles( state ) {
         return state.articles;
+    },
+
+    getContent( state ) {
+        return state.content;
     },
 
     getCategories( state ) {

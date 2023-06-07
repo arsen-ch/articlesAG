@@ -2,7 +2,7 @@
     <div>
 
         <!-- Main entries -->
-        <div v-for="(val, category, index) in $store.getters.getContent" :key="index">
+        <div v-for="(val, category) in $store.getters.getContent" :key="category">
 
             <!-- Title -->
             <div class="level mt-1 mb-x">
@@ -20,13 +20,13 @@
 
             <!-- Cards -->
             <div class="row">
-                <div v-for="entry in val.main" :key="entry.id" class="col-4">
+                <div v-for="entry in val.main" :key="entry.timestamp" class="col-4">
                     <card :category="category" :entry="entry" class="mb-x" />
                 </div>
             </div>
 
             <!-- Subs entries -->
-            <div v-for="(arr, subcategory, index) in val.subs" :key="index">
+            <div v-for="(arr, subcategory) in val.subs" :key="subcategory">
 
                 <!-- Subtitle -->
                 <div class="level mt-1 mb-x">
@@ -44,7 +44,7 @@
 
                 <!-- Cards -->
                 <div class="row">
-                    <div v-for="entry in arr" :key="entry.id" class="col-4">
+                    <div v-for="entry in arr" :key="entry.timestamp" class="col-4">
                         <card :category="subcategory" :entry="entry" class="mb-x" />
                     </div>
                 </div>
