@@ -102,8 +102,6 @@ export default {
 <style lang="scss">
 @import "~/assets/styles/vars.scss";
 
-$like-opacity: 0.7;
-
 .card {
 
     width: 299px;
@@ -169,27 +167,5 @@ $like-opacity: 0.7;
         font-size: 13px;
     }
 
-}
-
-// a.
-.scaleUp {
-    animation: scaleUp 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-}
-
-@keyframes scaleUp {
-
-    0% {
-        opacity: $like-opacity;
-    }
-
-    50% {
-        transform: rotate(-25deg) scale(2);
-        opacity: 1;
-    }
-
-    100% {
-        opacity: $like-opacity;
-
-    }
 }
 </style>

@@ -1,13 +1,16 @@
 <template>
     <section class="container">
+        {{ Object.entries( $store.getters.getContent ) }}
 
+        <br><br>
+        {{ $store.getters.getContent }}
         <!-- Header -->
         <head-box />
 
         <!-- Grid -->
-        <grid-box />
+        <grid-box :content="$store.getters.getContent" />
 
-        <!-- New category -->
+        <!-- New category -- dyn comp? -->
         <modal-category ref="modalNew" title="Новая категория" />
 
         <!-- Edit category  -->
@@ -18,8 +21,6 @@
 
         <!-- Delete category -->
         <modal-question ref="modalQst" title="Удалить категорию?" />
-
-        <!-- dyn comp -->
 
     </section>
 </template>
@@ -83,45 +84,5 @@ body {
 
 hr {
     border: 1px solid $color-inactive;
-}
-
-// a.
-.fade-enter-active,
-.fade-leave-active {
-    opacity: 1;
-    transition: all 0.2s;
-}
-
-.fade-enter,
-.fade-leave-to {
-    opacity: 0;
-}
-
-//
-
-.slide-enter-active,
-.slide-leave-active,
-.slide-move {
-    transition: 500ms cubic-bezier(0.59, 0.12, 0.34, 0.95);
-    transition-property: all;
-}
-
-.slide-enter {
-    opacity: 0;
-    transform: translateX(50px) scaleY(0.5);
-}
-
-.slide-enter-to {
-    opacity: 1;
-    transform: scaleY(1);
-}
-
-.slide-leave-active {
-    position: absolute;
-}
-
-.slide-leave-to {
-    opacity: 0;
-    transform-origin: center center;
 }
 </style>
