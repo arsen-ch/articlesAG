@@ -1,24 +1,68 @@
 import { flatDict, forKey, childReplace } from './utils';
 import { fetchedArticles, samplesCategories } from '~/assets/data/data.js';
 
+function withUpdate( commit, actions ) {
+
+    for ( const { act, arg } of actions ) {
+        commit( act, arg );
+    }
+
+    // Set content
+    commit( 'setContent' );
+}
+
 export const state = () => ( {
 
     articles: fetchedArticles,
 
-    categories: samplesCategories,
+    categories: {},
     registry: {},
     content: [],
 
     filterString: '',
-    isLoading: false
+    isLoading: true
 
 } );
 
 export const actions = {
 
     search( { commit }, key ) {
-        commit( 'setString', key );
-        commit( 'setContent' );
+        withUpdate( commit, [ { act: 'setValue', arg: { field: 'filterString', val: key } } ] );
+    },
+
+    addCategory( { commit }, { key, parent } ) {
+        withUpdate( commit, [ { act: 'addCategory', arg: { key, parent } } ] );
+    },
+
+    delCategory( { commit }, key ) {
+        withUpdate( commit, [ { act: 'delCategory', arg: key } ] );
+    },
+
+    addArticles( { commit }, { key, parent, articles } ) {
+        withUpdate( commit, [
+            { act: 'addCategory', arg: { key, parent } },
+            { act: 'addArticles', arg: { key, articles } } ]
+        );
+    },
+
+    movArticle( { commit }, { catDif, articleId, catAdd, article } ) {
+        withUpdate( commit, [
+            { act: 'delArticleFromCategories', arg: { keys: catDif, articleId } },
+            { act: 'addArticleToCategories', arg: { keys: catAdd, article } } ]
+        );
+    },
+
+    updArticles( { commit }, { key, oKey, parent, articles } ) {
+        withUpdate( commit, [
+            { act: 'renameCategory', arg: { oKey, nKey: key } },
+            { act: 'changeParent', arg: { key, newParent: parent } },
+            { act: 'updArticles', arg: { key, articles } } ]
+        );
+    },
+
+    clrCategories( { commit } ) {
+        withUpdate( commit, [ { act: 'setValue', arg: { field: 'categories', val: {} } }, ]
+        );
     }
 
 };
@@ -28,6 +72,8 @@ export const mutations = {
     // init( state ) { },
 
     addCategory( state, { key, parent } ) {
+
+        if ( key in state.categories ) { return; }
 
         // Check order
         parent = parent || null;
@@ -157,6 +203,10 @@ export const mutations = {
 
     //
 
+    setLoading( state, arg ) {
+        state.isLoading = arg;
+    },
+
     setContent( state ) {
 
         const entries = Object.entries( state.categories );
@@ -167,8 +217,8 @@ export const mutations = {
 
     },
 
-    setString( state, arg ) {
-        state.filterString = arg;
+    setValue( state, { field, val } ) {
+        state[ field ] = val;
     }
 
 };
@@ -213,6 +263,11 @@ export const getters = {
 
     getCategories( state ) {
         return Object.keys( state.categories );
+    },
+
+    getStoreDate( state ) {
+        return ( arg ) => { return state[ arg ]; };
+
     }
 
 };

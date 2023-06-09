@@ -32,7 +32,7 @@ export default {
         },
 
         apply() {
-            this.$store.commit( 'delCategory', this.name );
+            this.$store.dispatch( 'delCategory', this.name );
         },
 
         clear() { }

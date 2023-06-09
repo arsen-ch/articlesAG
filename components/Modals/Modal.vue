@@ -69,11 +69,13 @@ export default {
     methods: {
 
         show( arg ) {
+            document.body.classList.add( 'modal-open' );
             this.isVisible = true;
             this.arg = arg;
         },
 
         close() {
+            document.body.classList.remove( 'modal-open' );
             this.isVisible = false;
             this.arg = null;
         },
@@ -156,62 +158,6 @@ $error-border: 2px;
 
     &:focus {
         outline: $color-primary;
-    }
-}
-
-// a.
-.modal-enter-active,
-.modal-leave-active {
-    opacity: 1;
-    transition: all 0.35s ease-in-out;
-}
-
-.modal-enter,
-.modal-leave-to {
-    opacity: 0;
-    transform: scale(1.05);
-}
-
-// a.
-.modal-error {
-    animation: horizontal-shaking 0.8s ease-in-out both, red-border 0.8s ease-in-out both;
-}
-
-@keyframes horizontal-shaking {
-    0% {
-        transform: translateX(0)
-    }
-
-    25% {
-        transform: translateX(5px)
-    }
-
-    50% {
-        transform: translateX(-5px)
-    }
-
-    75% {
-        transform: translateX(5px)
-    }
-
-    100% {
-        transform: translateX(0)
-    }
-}
-
-@keyframes red-border {
-
-    0% {
-        border-color: rgba(0, 0, 0, 0);
-    }
-
-    50% {
-        border-color: rgb(255, 0, 0);
-    }
-
-    100% {
-        border-color: rgba(0, 0, 0, 0);
-
     }
 }
 </style>

@@ -9,7 +9,7 @@
             </button>
 
             <!-- Search field -->
-            <x-input v-model="filterString" icon="search" @enter="searchHandler" />
+            <x-input v-model="filterString" icon="search" />
 
         </div>
     </div>
@@ -33,10 +33,6 @@ export default {
     methods: {
         clickHandler() {
             this.$root.$emit( 'setVisible', { modal: 'modalNew' } );
-        },
-
-        searchHandler() {
-            this.$store.commit( 'setContent' );
         }
     }
 

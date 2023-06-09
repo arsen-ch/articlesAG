@@ -1,11 +1,11 @@
 @use "sass:math";
 
 @import 'vars';
+@import 'anim';
 @import 'generic';
 @import 'spaces';
 @import 'typo';
 
-@import 'anim';
 @import 'button';
 @import 'collapse';
 @import 'input';

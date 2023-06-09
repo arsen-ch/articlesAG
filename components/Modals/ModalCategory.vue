@@ -80,15 +80,10 @@ export default {
 
             if ( this.name === '' ) { return; }
 
-            if ( this.editMode ) {
-                this.$store.commit( 'renameCategory', { oKey: this.editMode, nKey: this.name } );
-                this.$store.commit( 'changeParent', { key: this.name, newParent: this.parent } );
-                this.$store.commit( 'updArticles', { key: this.name, articles: this.articles } );
-            }
-
             if ( !this.editMode ) {
-                this.$store.commit( 'addCategory', { key: this.name, parent: this.parent } );
-                this.$store.commit( 'addArticles', { key: this.name, articles: this.articles } );
+                this.$store.dispatch( 'addArticles', { key: this.name, parent: this.parent, articles: this.articles } );
+            } else {
+                this.$store.dispatch( 'updArticles', { key: this.name, oKey: this.editMode, parent: this.parent, articles: this.articles } );
             }
 
             // Close

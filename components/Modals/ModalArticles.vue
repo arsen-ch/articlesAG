@@ -12,7 +12,7 @@
                 <i>
                     <x-option :index="-1"
                               :content="'Создать новую категорию...'"
-                              @click="clickNewCategory( name )" />
+                              @click="clickNewCategory()" />
                 </i>
 
                 <x-option v-for="( name, index ) in $store.getters.getCategories" :key="index"
@@ -44,8 +44,8 @@ export default {
     data() {
         return {
             entry: {},
-            categories: [],
             newName: '',
+            categories: [],
             showOptions: false
         };
     },
@@ -83,7 +83,7 @@ export default {
         },
 
         addNewCategory() {
-            this.$store.commit( 'addCategory', { key: this.newName } );
+            this.$store.dispatch( 'addCategory', { key: this.newName } );
             this.showOptions = false;
             this.newName = '';
         },
@@ -95,24 +95,21 @@ export default {
             // Delete
             const ints = this.categories.filter( x => raw.includes( x ) );
             const diff = raw.filter( x => !ints.includes( x ) );
-            this.$store.commit( 'delArticleFromCategories', { keys: diff, articleId: this.entry.id } );
 
-            // Add
+            // Adds
             const outs = this.categories.filter( x => !raw.includes( x ) );
-            this.$store.commit( 'addArticleToCategories', { keys: outs, article: this.entry } );
 
-            // Close
-            // this.clear();
+            // Save
+            this.$store.dispatch( 'movArticle', {
+                catDif: diff,
+                articleId: this.entry.id,
+                catAdd: outs,
+                article: this.entry
+            } );
 
         },
 
-        clear() {
-
-            // this.id = null;
-            // this.parent = null;
-            // this.category = null;
-
-        }
+        clear() { }
     }
 };
 </script>

@@ -86,7 +86,7 @@ $button-padding-lg: 15px 20px;
 
     &.loading {
 
-        @include loading(1.2em, 0.2em);
+        @include loading(1.2em, 0.2em, white);
 
         color: transparent !important;
         position: relative;

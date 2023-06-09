@@ -1,13 +1,17 @@
 <template>
     <section class="container">
 
-        <!-- <div :class="[ 'dimmer loading', { 'active': true } ]"></div> -->
+        <transition name="fade">
+            <div v-show="$store.state.isLoading" :class="[ 'loader', { 'active': $store.state.isLoading } ]"></div>
+        </transition>
 
         <!-- Header -->
         <head-box />
 
+        <empty-box v-if="$store.getters.getContent.length === 0" />
+
         <!-- Search result -->
-        <template v-if="$store.state.filterString !== ''">
+        <template v-if="!notSearch">
 
             <div class="row">
                 <div v-for="entry in $store.getters.uniqArticles" :key="entry.timestamp" class="col-4">
@@ -18,13 +22,16 @@
         </template>
 
         <!-- Main grid -->
-        <template v-if="$store.state.filterString === ''">
+        <template v-if="notSearch">
 
             <!-- Grid -->
             <grid-box :content="pagedData" />
 
             <!-- Pagination -->
-            <x-pagination :total="pagination.total" :current="pagination.current" :rows="pagination.rows"
+            <x-pagination v-if="$store.getters.getContent.length > 4"
+                          :total="pagination.total"
+                          :current="pagination.current"
+                          :rows="pagination.rows"
                           @change="paginationHandler" />
 
         </template>
@@ -41,7 +48,7 @@
         <!-- Delete category -->
         <modal-question ref="modalQst" title="Удалить категорию?" />
 
-
+        <top-back />
 
     </section>
 </template>
@@ -61,6 +68,10 @@ export default {
 
     computed: {
 
+        notSearch() {
+            return this.$store.state.filterString === '';
+        },
+
         pagedData() {
 
             const entries = this.$store.getters.getContent;
@@ -72,33 +83,58 @@ export default {
 
     watch: {
 
-        '$store.state.categories': {
-            handler() {
-                this.$store.commit( 'setContent' );
-            },
-            deep: true
-        },
-
         '$store.state.content': {
             handler() {
                 this.pagination.total = this.$store.state.content.length || 1;
-            }
+            },
+            deep: true
         }
 
     },
 
+    beforeMount() {
+        window.addEventListener( 'beforeunload', this.storeCategories );
+    },
+
+    beforeDestroy() {
+        window.removeEventListener( 'beforeunload', this.storeCategories, false );
+    },
+
     mounted() {
 
-        this.$store.commit( 'setContent' );
         this.$root.$on( 'setVisible', this.setVisible );
+
+        // Load item
+        const item = JSON.parse( window.localStorage.getItem( 'articlesAG' ) );
+        if ( item ) {
+            this.$store.commit( 'setValue', { field: 'categories', val: item } );
+        }
+
+        // Init
+        this.$store.commit( 'setContent' );
+
+        // Load
+        this.pseudoLoader();
 
     },
 
     methods: {
 
+        storeCategories() {
+
+            // Save item
+            const categories = this.$store.getters.getStoreDate( 'categories' );
+            if ( Object.keys( categories ).length > 0 ) {
+                window.localStorage.setItem( 'articlesAG', JSON.stringify( categories ) );
+            }
+
+        },
+
         setVisible( { modal, arg } ) {
 
-            const xmodal = this.$refs[ modal ].$refs.xmodal;
+            const xmodal = this.$refs[ modal ]?.$refs?.xmodal || null;
+            if ( !xmodal ) { return; }
+
             xmodal.show( arg || null );
 
             // this.$nextTick( () => {
@@ -109,6 +145,14 @@ export default {
 
         paginationHandler( current ) {
             this.pagination.current = current;
+        },
+
+        pseudoLoader() {
+
+            // a.
+            this.$store.commit( 'setLoading', true );
+            setTimeout( () => { this.$store.commit( 'setLoading', false ); }, 200 );
+
         }
 
     }
@@ -135,7 +179,9 @@ body {
     font-size: $font-base-size;
     padding: 64px;
 
-    overflow-y: scroll;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 hr {

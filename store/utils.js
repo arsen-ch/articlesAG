@@ -44,7 +44,7 @@ export function filterDict( entries, str, field = 'title' ) {
     for ( const [ key, val ] of entries ) {
 
         const _ = Object.entries( val.articles ).filter( ( [ _, article ] ) => {
-            return article[ field ].includes( str );
+            return ( article[ field ].toLowerCase() ).includes( str.toLowerCase() );
         } );
 
         filtered.push( [ key, { parent: val.parent, articles: Object.fromEntries( _ ) } ] );
