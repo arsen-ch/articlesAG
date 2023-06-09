@@ -5,7 +5,7 @@
 
             <img src="/svg/question-circle.svg" alt="">
             <h3 class="title my-x">{{ title }}</h3>
-            <span style="font-size: 14px;">Все дочернии категории также будут удалены</span>
+            <span style="font-size: 14px;">Все дочернии категории удалены не будут</span>
 
         </div>
 

@@ -1,14 +1,33 @@
 <template>
     <section class="container">
-        {{ Object.entries( $store.getters.getContent ) }}
 
-        <br><br>
-        {{ $store.getters.getContent }}
+        <!-- <div :class="[ 'dimmer loading', { 'active': true } ]"></div> -->
+
         <!-- Header -->
         <head-box />
 
-        <!-- Grid -->
-        <grid-box :content="$store.getters.getContent" />
+        <!-- Search result -->
+        <template v-if="$store.state.filterString !== ''">
+
+            <div class="row">
+                <div v-for="entry in $store.getters.uniqArticles" :key="entry.timestamp" class="col-4">
+                    <card :category="entry.category" :entry="entry" class="mb-x" />
+                </div>
+            </div>
+
+        </template>
+
+        <!-- Main grid -->
+        <template v-if="$store.state.filterString === ''">
+
+            <!-- Grid -->
+            <grid-box :content="pagedData" />
+
+            <!-- Pagination -->
+            <x-pagination :total="pagination.total" :current="pagination.current" :rows="pagination.rows"
+                          @change="paginationHandler" />
+
+        </template>
 
         <!-- New category -- dyn comp? -->
         <modal-category ref="modalNew" title="Новая категория" />
@@ -22,11 +41,34 @@
         <!-- Delete category -->
         <modal-question ref="modalQst" title="Удалить категорию?" />
 
+
+
     </section>
 </template>
 
 <script>
 export default {
+
+    data() {
+        return {
+            pagination: {
+                current: 1,
+                rows: 4,
+                total: 0
+            }
+        };
+    },
+
+    computed: {
+
+        pagedData() {
+
+            const entries = this.$store.getters.getContent;
+            const current = ( this.pagination.current - 1 ) * this.pagination.rows;
+
+            return entries.slice( current, current + this.pagination.rows );
+        }
+    },
 
     watch: {
 
@@ -35,6 +77,12 @@ export default {
                 this.$store.commit( 'setContent' );
             },
             deep: true
+        },
+
+        '$store.state.content': {
+            handler() {
+                this.pagination.total = this.$store.state.content.length || 1;
+            }
         }
 
     },
@@ -53,6 +101,14 @@ export default {
             const xmodal = this.$refs[ modal ].$refs.xmodal;
             xmodal.show( arg || null );
 
+            // this.$nextTick( () => {
+            //     xmodal.$el.focus();
+            // } );
+
+        },
+
+        paginationHandler( current ) {
+            this.pagination.current = current;
         }
 
     }

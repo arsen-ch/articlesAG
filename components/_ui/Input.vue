@@ -9,7 +9,7 @@
                @input="updateValue( $event.target.value )"
                @keydown.enter="$emit( 'enter' )">
 
-        <img v-if="showIcon" class="icon vertical-center" :src="`svg/${icon}.svg`" />
+        <img v-if="icon" class="icon vertical-center" :src="`svg/${icon}.svg`" />
 
     </div>
 </template>
@@ -18,11 +18,10 @@
 export default {
 
     props: {
-        id: { type: String, default: 'search' },
-        icon: { type: String, default: 'search' },
-        holder: { type: String, default: 'Найти...' },
+        id: { type: String, default: 'xinput' },
+        icon: { type: [ String, null ], default: null },
         value: { type: [ String, Number, null ], default: null },
-        showIcon: { type: Boolean, default: false }
+        holder: { type: String, default: 'Найти...' }
     },
 
     methods: {

@@ -1,24 +1,25 @@
 import { flatDict, forKey, childReplace } from './utils';
-import { fetchedData, sample } from '~/assets/data/data.js';
+import { fetchedArticles, samplesCategories } from '~/assets/data/data.js';
 
 export const state = () => ( {
 
-    articles: fetchedData,
+    articles: fetchedArticles,
 
-    categories: sample,
+    categories: samplesCategories,
     registry: {},
     content: [],
 
+    filterString: '',
     isLoading: false
 
 } );
 
 export const actions = {
 
-    // write( { commit }, key ) {
-    //     // commit( 'addCategory' )
-    //     // commit( 'addArticles' )
-    // }
+    search( { commit }, key ) {
+        commit( 'setString', key );
+        commit( 'setContent' );
+    }
 
 };
 
@@ -98,6 +99,8 @@ export const mutations = {
 
     },
 
+    //
+
     delArticle( state, { key, articleId } ) {
 
         if ( !state.categories[ key ] ) { return; }
@@ -157,11 +160,15 @@ export const mutations = {
     setContent( state ) {
 
         const entries = Object.entries( state.categories );
-        const { registry, content } = flatDict( entries, state.categories );
+        const { registry, content } = flatDict( entries, state.categories, state.filterString );
 
         this._vm.$set( state, 'registry', registry );
-        this._vm.$set( state, 'content', content );
+        this._vm.$set( state, 'content', Object.entries( content ) );
 
+    },
+
+    setString( state, arg ) {
+        state.filterString = arg;
     }
 
 };
@@ -180,6 +187,24 @@ export const getters = {
 
     getArticles( state ) {
         return state.registry;
+    },
+
+    uniqArticles( state ) {
+
+        const content = state.content;
+        const articles = content.map( ( [ _, { main, subs } ] ) => {
+            return [
+                ...main.map( ( item ) => { return { ...item, category: _ }; } ),
+                ...Object.values( subs ).map( ( item ) => { return { ...item, category: _ }; } ) ];
+        } );
+
+        return articles.reduce( ( a, b ) => a.concat( b ), [] );
+
+        // const articles = content.map( ( [ _, { main, subs } ] ) => {
+        //     return [ ...main.map( item => item.title ), ...Object.values( subs ).map( item => item.title ) ];
+        // } );
+        // return [ ...new Set( articles.reduce( ( a, b ) => a.concat( b ), [] ) ) ].filter( item => item );
+
     },
 
     getContent( state ) {

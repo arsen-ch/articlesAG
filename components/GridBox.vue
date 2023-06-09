@@ -2,8 +2,8 @@
     <div>
 
         <!-- Main entries ----- to comp / slot? -->
-        <div v-for="(val, category) in content" :key="category">
-    
+        <div v-for="[ category, val ] in content" :key="category">
+
             <x-collapse :index="0" :category="category" :capacity="val.main.length">
 
                 <!-- Cards -->
@@ -37,7 +37,7 @@
 <script>
 export default {
     props: {
-        content: { type: Object, default: () => { } }
+        content: { type: Array, default: () => { } }
     }
 };
 </script>

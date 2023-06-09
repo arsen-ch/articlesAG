@@ -3,13 +3,13 @@
         <div class="search-bar mb-2">
 
             <!-- Create button -->
-            <button class="btn" @click="clickHandler()">
+            <button class="btn btn-big" @click="clickHandler()">
                 Создать категорию
                 <img class="vertical-center" src="svg/plus.svg">
             </button>
 
             <!-- Search field -->
-            <x-input />
+            <x-input v-model="filterString" icon="search" @enter="searchHandler" />
 
         </div>
     </div>
@@ -18,9 +18,25 @@
 <script>
 export default {
 
+    computed: {
+
+        filterString: {
+            get() {
+                return this.$store.state.filterString;
+            },
+            set( val ) {
+                this.$store.dispatch( 'search', val ); // this.uniqArticles[ val ]
+            }
+        }
+    },
+
     methods: {
         clickHandler() {
             this.$root.$emit( 'setVisible', { modal: 'modalNew' } );
+        },
+
+        searchHandler() {
+            this.$store.commit( 'setContent' );
         }
     }
 
@@ -32,9 +48,14 @@ export default {
 
     display: flex;
 
-    .btn {
+    .btn-big {
         width: 280px;
         margin-right: 16px;
+    }
+
+    .btn-search {
+        width: 32px;
+        margin-left: 5px;
     }
 }
 </style>

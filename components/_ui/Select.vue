@@ -9,7 +9,8 @@
         <!-- Search -->
         <input ref="searchInput"
                autocomplete="off"
-               @input.stop="searchInputHandler( $event.target.value )" />
+               @input.stop="searchInputHandler( $event.target.value )"
+               @keydown.enter="$emit( 'enter' )" />
 
         <!--  Text -->
         <div :class="[ 'text', { 'hint': ( !preselect && !selectedItem ) } ]"

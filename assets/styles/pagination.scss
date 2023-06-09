@@ -1,0 +1,43 @@
+.pagination {
+
+    ul {
+
+        display: flex;
+        justify-content: center;
+
+        list-style: none;
+        padding: 0;
+
+    }
+
+    .item {
+        text-align: center;
+
+        cursor: pointer;
+        user-select: none;
+
+        padding: 5px 0;
+        width: 20px;
+        
+        border-radius: calc($border-radius / 2);
+
+        // &.total {
+        //     @include form-element($interactive: false);
+        //     cursor: default;
+        // }
+
+        &:not(.total):hover {
+            color: $color-dimmer;
+        }
+
+        &.active,
+        &.active:hover {
+            color: black;
+            background: $color-inactive;
+        }
+
+        &:not(:last-child) {
+            margin-right: 20px;
+        }
+    }
+}

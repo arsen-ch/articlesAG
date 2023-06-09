@@ -8,11 +8,24 @@
 
             <!-- Parent category -->
             <x-select :hint="'Родительская категория'" class="mb-x">
+
+                <i>
+                    <x-option :index="-1"
+                              :content="'Создать новую категорию...'"
+                              @click="clickNewCategory( name )" />
+                </i>
+
                 <x-option v-for="( name, index ) in $store.getters.getCategories" :key="index"
                           :index="index"
                           :content="name"
                           @click="clickParentHandler( name )" />
             </x-select>
+
+            <!-- New Category input-->
+            <div v-show="showOptions" class="controls-new">
+                <x-input v-model="newName" :show-icon="false" holder="Название новой категории" class="mb-x" />
+                <button class="btn btn-new" @click="addNewCategory()">Создать</button>
+            </div>
 
             <!-- Category row -->
             <items-row :array="categories" @delete-article="( key ) => { deleteHandler( key ); }" />
@@ -31,7 +44,9 @@ export default {
     data() {
         return {
             entry: {},
-            categories: []
+            categories: [],
+            newName: '',
+            showOptions: false
         };
     },
 
@@ -59,6 +74,18 @@ export default {
 
         deleteHandler( key ) {
             this.categories.splice( this.categories.indexOf( key ), 1 );
+        },
+
+        //
+
+        clickNewCategory() {
+            this.showOptions = true;
+        },
+
+        addNewCategory() {
+            this.$store.commit( 'addCategory', { key: this.newName } );
+            this.showOptions = false;
+            this.newName = '';
         },
 
         apply() {
@@ -89,3 +116,18 @@ export default {
     }
 };
 </script>
+
+<style lang="scss">
+.controls {
+
+    &-new {
+        display: flex;
+    }
+
+    .btn-new {
+        width: 150px;
+        margin-left: 5px;
+    }
+
+}
+</style>

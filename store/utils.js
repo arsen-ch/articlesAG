@@ -1,7 +1,8 @@
-export function flatDict( entries, categories ) {
+export function flatDict( entries, categories, filterString ) {
 
     // Sort
     entries = entries.sort( ( a, b ) => b[ 1 ].timestamp - a[ 1 ].timestamp );
+    entries = filterDict( entries, filterString );
 
     const content = {};
     const registry = {};
@@ -25,8 +26,10 @@ export function flatDict( entries, categories ) {
     }
 
     // #2 pass
-    for ( const [ key, category ] of excluded ) {
-        content[ category.parent ].subs[ key ] = Object.values( categories[ key ].articles );
+    if ( filterString === '' ) {
+        for ( const [ key, category ] of excluded ) {
+            content[ category.parent ].subs[ key ] = Object.values( categories[ key ].articles );
+        }
     }
 
     return { content, registry };
@@ -35,11 +38,13 @@ export function flatDict( entries, categories ) {
 
 export function filterDict( entries, str, field = 'title' ) {
 
+    if ( str === '' ) { return entries; }
+
     const filtered = [];
     for ( const [ key, val ] of entries ) {
 
         const _ = Object.entries( val.articles ).filter( ( [ _, article ] ) => {
-            return article[ field ] === str;
+            return article[ field ].includes( str );
         } );
 
         filtered.push( [ key, { parent: val.parent, articles: Object.fromEntries( _ ) } ] );
@@ -47,7 +52,6 @@ export function filterDict( entries, str, field = 'title' ) {
     }
 
     return filtered;
-
 };
 
 export function childReplace( children, oKey, nKey ) {

@@ -2,7 +2,7 @@
     <transition name="modal">
 
         <!-- Anchor -->
-        <div v-if="isVisible" class="dimmer active" :style="{ position: 'fixed' }" @keydown.esc.stop="cancelHandler()">
+        <div v-if="isVisible" class="dimmer active" :style="{ position: 'fixed' }" @keydown.esc="cancelHandler()">
 
             <!-- Modal Window -->
             <div class="modal">

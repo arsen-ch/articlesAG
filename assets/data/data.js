@@ -1,54 +1,44 @@
-function samplesGenerator( iters ) {
+const titles = [
+    'Кричащий заголовок',
+    'Новая глава',
+    'Успешный успех',
+    'Продающая статья',
+    'Пустая заметка',
+    'Очерк',
+    'Нужно лишь только...',
+    'Смотреть в будущее',
+    'Однажды в..',
+    'Важная информация'
+];
 
-    const titles = [
-        'Заголовок',
-        'Кричащий заголовок',
-        'Новая статья',
-        'Успешный успех',
-        'Продающая статья',
-        'Нужно лишь только...',
-        'Смотреть в будущее',
-        'Однажды в..'
-    ];
+const script = [
+    'Краткое описание',
+    'Описание статьи',
+    'Подпись к карточке',
+    'Очень длинное описание к карточке',
+    'Идейные соображения высшего порядка, а также сложившаяся структура организации играет важную роль в формировании существенных финансовых и административных условий. Равным образом начало повседневной работы по формированию позиции представляет собой интересный эксперимент проверки направлений прогрессивного развития.'
+];
 
-    const script = [
-        'Краткое описание',
-        'Описание статьи',
-        'Подпись к карточке',
-        'Очень длинное описание к карточке',
-        'Идейные соображения высшего порядка, а также сложившаяся структура организации играет важную роль в формировании существенных финансовых и административных условий. Равным образом начало повседневной работы по формированию позиции представляет собой интересный эксперимент проверки направлений прогрессивного развития.'
-    ];
+const categories = [
+    'Начальная',
+    'Вторая',
+    'Третья',
+    'Четвертая',
+    'Последняя',
+    'Модная',
+    'Молодежная',
+    'Летняя'
+];
 
-    const samples = [];
-    for ( let i = 0; i < iters; i++ ) {
-
-        const sample = {
-            id: i,
-            title: titles[ Math.floor( Math.random() * titles.length ) ],
-            image: 'img/card-bg.jpg',
-            texts: script[ Math.floor( Math.random() * titles.length ) ],
-            likes: Math.floor( Math.random() * 100 ) || 0
-        };
-
-        samples.push( sample );
-    }
-
-    return samples;
-}
-
-//
-
-export const fetchedData = samplesGenerator( 20 );
-
-export const sample = {
-    'Начальный заголовок': {
+const sample = {
+    'Самая большая категория': {
         timestamp: 0,
         parent: null,
         children: [ 'Название подкатегории', 'Подкатегория 2' ],
         articles: {
             0: {
                 id: 0,
-                title: 'Новая статья',
+                title: 'Новая статья!',
                 image: 'img/card-bg.jpg',
                 texts: 'Краткое описание',
                 likes: 90
@@ -99,7 +89,7 @@ export const sample = {
     },
     'Название подкатегории': {
         timestamp: 1,
-        parent: 'Начальный заголовок',
+        parent: 'Самая большая категория',
         children: [],
         articles: {
             1: {
@@ -111,7 +101,7 @@ export const sample = {
             },
             11: {
                 id: 11,
-                title: 'Новая статья',
+                title: 'Новая статья!',
                 image: 'img/card-bg.jpg',
                 texts: 'Подпись к карточке',
                 likes: 25
@@ -132,7 +122,7 @@ export const sample = {
             },
             6: {
                 id: 6,
-                title: 'Новая статья',
+                title: 'Новая статья!',
                 image: 'img/card-bg.jpg',
                 texts: 'Описание статьи',
                 likes: 76
@@ -141,7 +131,7 @@ export const sample = {
     },
     'Подкатегория 2': {
         timestamp: 3,
-        parent: 'Начальный заголовок',
+        parent: 'Самая большая категория',
         children: [],
         articles: {
             2: {
@@ -153,7 +143,7 @@ export const sample = {
             },
             6: {
                 id: 6,
-                title: 'Новая статья',
+                title: 'Новая статья!',
                 image: 'img/card-bg.jpg',
                 texts: 'Описание статьи',
                 likes: 76
@@ -161,3 +151,72 @@ export const sample = {
         }
     }
 };
+
+//
+
+function rnd( max ) {
+    return Math.floor( Math.random() * max );
+}
+
+function articlesGenerator( iters ) {
+
+    const samples = [];
+    for ( let i = 0; i < iters; i++ ) {
+
+        const sample = {
+            id: i,
+            title: titles[ rnd( titles.length ) ],
+            image: 'img/card-bg.jpg',
+            texts: script[ rnd( titles.length ) ],
+            likes: Math.floor( Math.random() * 100 ) || 0
+        };
+
+        samples.push( sample );
+    }
+
+    return samples;
+}
+
+function categoriesGenerator( articlesArr ) {
+
+    const samples = {};
+    for ( let i = 0; i < categories.length; i++ ) {
+
+        const category = `${categories[ rnd( categories.length ) ]} категория`;
+
+        const articles = {};
+        for ( let i = 0; i < rnd( 10 ) % articlesArr.length; i++ ) {
+            const article = articlesArr[ i ];
+            articles[ article.id ] = article;
+        }
+
+        samples[ category ] = {
+            timestamp: rnd( 100 ),
+            parent: null,
+            children: [],
+            articles
+        };
+    }
+
+    const parents = Object.keys( samples );
+    const entries = Object.entries( samples );
+    for ( const [ key, sample ] of entries.slice( 1, entries ) ) {
+
+        if ( parents.length === 0 ) { break; }
+        const parent = parents.splice( [ rnd( parents.length ) ], 1 )[ 0 ];
+
+        sample.parent = parent;
+        if ( !( key === parent ) && !samples[ parent ].children.includes( key ) ) {
+            samples[ parent ].children.push( key );
+        }
+
+    }
+
+    return samples;
+}
+
+//
+
+export const fetchedArticles = articlesGenerator( 20 );
+
+export const samplesCategories = { ...sample, ...categoriesGenerator( fetchedArticles ) };

@@ -40,7 +40,7 @@ export default {
     props: {
         index: { type: [ String, Number ], default: 0, required: true },
         active: { type: Boolean, default: true },
-        category: { type: Object, default: () => { } },
+        category: { type: String, default: '' },
         capacity: { type: Number, default: 0 },
         isSub: { type: Boolean, default: false }
     },

@@ -9,6 +9,7 @@ $padding-horizontal: 0.925em;
 
 .collapse {
 
+
     >.item {
 
         transition: all .3s;
@@ -32,6 +33,7 @@ $padding-horizontal: 0.925em;
         >.caption {
 
             padding: 0;
+            user-select: none;
 
             .title {
 
